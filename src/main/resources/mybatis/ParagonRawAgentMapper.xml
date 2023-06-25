@@ -7,4 +7,9 @@
         from ParagonRawAgent
         LIMIT 10
     </select>
+
+    <select id="selectParagonRawAgentById" resultType="map">
+        select User_Code, Active, Goomzee
+        from ParagonRawAgent where User_Code=#{id}
+    </select>
 </mapper>

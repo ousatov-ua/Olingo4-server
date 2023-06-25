@@ -19,7 +19,7 @@ public class DomainToEntityConverter {
     }
 
     public static Entity convertParagonRawAgent(Map<String, Object> data) {
-        final Entity e = new Entity()
+        final var e = new Entity()
                 .addProperty(new Property(null, "User_Code", ValueType.PRIMITIVE, data.get("User_Code")))
                 .addProperty(new Property(null, "Active", ValueType.PRIMITIVE, data.get("Active")))
                 .addProperty(new Property(null, "Goomzee", ValueType.PRIMITIVE,
@@ -29,8 +29,8 @@ public class DomainToEntityConverter {
     }
 
     public static EntityCollection convertParagonRawAgentList(List<Map<String, Object>> list) {
-        EntityCollection pragentsCollection = new EntityCollection();
-        List<Entity> pragentList = pragentsCollection.getEntities();
+        var pragentsCollection = new EntityCollection();
+        var pragentList = pragentsCollection.getEntities();
         list.forEach(data -> pragentList.add(convertParagonRawAgent(data)));
         return pragentsCollection;
     }

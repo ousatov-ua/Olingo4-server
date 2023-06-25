@@ -6,4 +6,6 @@ import java.util.Map;
 public interface ParagonRawAgentMapper {
 
     List<Map<String, Object>> selectParagonRawAgents();
+
+    Map<String, Object> selectParagonRawAgentById(String id);
 }

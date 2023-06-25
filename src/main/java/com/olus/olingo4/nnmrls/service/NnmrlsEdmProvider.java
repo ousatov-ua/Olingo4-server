@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * This class is supposed to declare the metadata of the OData service
  * it is invoked by the Olingo framework e.g. when the metadata document of the service is invoked
- * e.g. <a href="http://localhost:8080/ExampleService1/ExampleService1.svc/$metadata">...</a>
+ * e.g. <a href="http://localhost:8080/<app>/<service>.svc/$metadata">...</a>
  *
  * @author Oleksii Usatov
  */
@@ -44,11 +44,11 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
     public List<CsdlSchema> getSchemas() {
 
         // create Schema
-        CsdlSchema schema = new CsdlSchema();
+        var schema = new CsdlSchema();
         schema.setNamespace(NAMESPACE);
 
         // add EntityTypes
-        List<CsdlEntityType> entityTypes = new ArrayList<CsdlEntityType>();
+        var entityTypes = new ArrayList<CsdlEntityType>();
         entityTypes.add(getEntityType(ET_PRAGENT_FQN));
         schema.setEntityTypes(entityTypes);
 
@@ -56,7 +56,7 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         schema.setEntityContainer(getEntityContainer());
 
         // finally
-        List<CsdlSchema> schemas = new ArrayList<CsdlSchema>();
+        var schemas = new ArrayList<CsdlSchema>();
         schemas.add(schema);
 
         return schemas;
@@ -70,16 +70,16 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         if (entityTypeName.equals(ET_PRAGENT_FQN)) {
 
             //create EntityType properties
-            CsdlProperty id = new CsdlProperty().setName("User_Code").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            CsdlProperty name = new CsdlProperty().setName("Active").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            CsdlProperty description = new CsdlProperty().setName("Goomzee").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            var id = new CsdlProperty().setName("User_Code").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            var name = new CsdlProperty().setName("Active").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            var description = new CsdlProperty().setName("Goomzee").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
 
             // create CsdlPropertyRef for Key element
-            CsdlPropertyRef propertyRef = new CsdlPropertyRef();
+            var propertyRef = new CsdlPropertyRef();
             propertyRef.setName("User_Code");
 
             // configure EntityType
-            CsdlEntityType entityType = new CsdlEntityType();
+            var entityType = new CsdlEntityType();
             entityType.setName(ET_PRAGENT_NAME);
             entityType.setProperties(Arrays.asList(id, name, description));
             entityType.setKey(Collections.singletonList(propertyRef));
@@ -92,29 +92,26 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
 
     @Override
     public CsdlEntitySet getEntitySet(FullQualifiedName entityContainer, String entitySetName) {
-
         if (entityContainer.equals(CONTAINER)) {
             if (entitySetName.equals(ES_PRAGENT_NAME)) {
                 CsdlEntitySet entitySet = new CsdlEntitySet();
                 entitySet.setName(ES_PRAGENT_NAME);
                 entitySet.setType(ET_PRAGENT_FQN);
-
                 return entitySet;
             }
         }
-
         return null;
     }
 
     @Override
     public CsdlEntityContainer getEntityContainer() {
 
-        // create EntitySets
-        List<CsdlEntitySet> entitySets = new ArrayList<CsdlEntitySet>();
+        // Create EntitySets
+        var entitySets = new ArrayList<CsdlEntitySet>();
         entitySets.add(getEntitySet(CONTAINER, ES_PRAGENT_NAME));
 
-        // create EntityContainer
-        CsdlEntityContainer entityContainer = new CsdlEntityContainer();
+        // Create EntityContainer
+        var entityContainer = new CsdlEntityContainer();
         entityContainer.setName(CONTAINER_NAME);
         entityContainer.setEntitySets(entitySets);
 
@@ -124,13 +121,12 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntityContainerInfo getEntityContainerInfo(FullQualifiedName entityContainerName) {
 
-        // This method is invoked when displaying the service document at e.g. http://localhost:8080/DemoService/DemoService.svc
+        // This method is invoked when displaying the service document at e.g. http://localhost:8080/<app>/<service>.svc
         if (entityContainerName == null || entityContainerName.equals(CONTAINER)) {
             CsdlEntityContainerInfo entityContainerInfo = new CsdlEntityContainerInfo();
             entityContainerInfo.setContainerName(CONTAINER);
             return entityContainerInfo;
         }
-
         return null;
     }
 }

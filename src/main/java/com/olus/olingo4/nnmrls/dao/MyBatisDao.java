@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Implementation for {@link IDao}
@@ -36,6 +37,22 @@ public class MyBatisDao implements IDao {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
             return subscriberMapper.selectParagonRawAgents();
+        }
+    }
+
+    @Override
+    public Optional<Map<String, Object>> selectParagonRawAgentById(String id) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
+            var key = id;
+            if (id.length() >= 3) {
+                key = id.substring(1, id.length() - 1);
+            }
+            var result = subscriberMapper.selectParagonRawAgentById(key);
+            if (result == null) {
+                return Optional.empty();
+            }
+            return Optional.of(result);
         }
     }
 }
