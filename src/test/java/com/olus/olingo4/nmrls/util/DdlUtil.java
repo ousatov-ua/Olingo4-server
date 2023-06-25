@@ -4,22 +4,17 @@ import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
-import net.sf.jsqlparser.statement.create.table.Index;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 
 /**
@@ -61,24 +56,19 @@ public class DdlUtil {
                 });
     }
 
-    private static void generateSourceCode(String oracleDdl) throws JSQLParserException, IOException {
-
-        var statement = CCJSqlParserUtil.parse(oracleDdl);
+    /**
+     * Generate JAVA code for Olingo4
+     * @param ddl ddl code
+     * @throws JSQLParserException exception
+     * @throws IOException exception
+     */
+    private static void generateSourceCode(String ddl) throws JSQLParserException, IOException {
+        var statement = CCJSqlParserUtil.parse(ddl);
         var createTable = (CreateTable) statement;
-
-        var table = createTable.getTable().getName().toUpperCase();
-        final Set<String> pks = createTable.getIndexes() == null ? new HashSet<>() :
-                createTable.getIndexes()
-                        .stream()
-                        .map(Index::getColumnsNames)
-                        .flatMap(List::stream)
-                        .map(String::toUpperCase)
-                        .collect(Collectors.toSet());
 
         String property = "property_";
         var number = new AtomicInteger(0);
         try (var fileWriter = new FileWriter("java_code.java", true)) {
-            var code = new StringBuilder();
             var properties = new LinkedList<String>();
             createTable.getColumnDefinitions().forEach(columnDefinition -> {
                         String columnName = columnDefinition.getColumnName();
@@ -93,8 +83,6 @@ public class DdlUtil {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        List<String> spec = columnDefinition.getColumnSpecs();
-                        String isPrimary = pks.contains(columnName) || isPrimary(columnDefinition) ? "true" : "false";
                     }
             );
             fileWriter.write("var entityType = new CsdlEntityType();\n");
@@ -103,20 +91,6 @@ public class DdlUtil {
             fileWriter.write("\n");
         }
     }
-
-    /**
-     * Check if provided column is primary
-     *
-     * @param columnDefinition {@link ColumnDefinition}
-     * @return true if PK
-     */
-    private static boolean isPrimary(ColumnDefinition columnDefinition) {
-        if (columnDefinition.getColumnSpecs() != null) {
-            return columnDefinition.getColumnSpecs().stream().anyMatch(e -> e.toUpperCase().contains("PRIMARY"));
-        }
-        return false;
-    }
-
 
     /**
      * Load content for specified file path
