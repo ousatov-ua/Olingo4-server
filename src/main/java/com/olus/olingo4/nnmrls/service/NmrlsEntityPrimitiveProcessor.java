@@ -46,7 +46,7 @@ public class NmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
      * and the response:
      * {
      *  @odata.context: "$metadata#SomeEntity/Name",
-     *  value: "Notebook Basic 15"
+     *  value: "Some name"
      * }
      */
     public void readPrimitive(ODataRequest request, ODataResponse response,
@@ -72,8 +72,10 @@ public class NmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
         // We know we have only primitive types in our model
         var edmPropertyType = (EdmPrimitiveType) edmProperty.getType();
 
-        // Retrieve data from backend
-        // Retrieve the entity data, for which the property has to be read
+        /*
+          Retrieve data from backend
+          Retrieve the entity data, for which the property has to be read
+         */
         var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates);
         if (entityOpt.isEmpty()) { // Bad request
             throw new ODataApplicationException("Entity not found", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);

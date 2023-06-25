@@ -10,6 +10,8 @@ import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is supposed to declare the metadata of the OData service
@@ -19,6 +21,11 @@ import java.util.List;
  * @author Oleksii Usatov
  */
 public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
+
+    /**
+     * Cache for CsdlEntityType
+     */
+    private static final Map<FullQualifiedName, CsdlEntityType> CSDL_ENTITY_TYPE_CACHE = new ConcurrentHashMap<>();
 
     // Service Namespace
     public static final String NAMESPACE = "OData.Nnmrls";
@@ -53,20 +60,19 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         // finally
         var schemas = new ArrayList<CsdlSchema>();
         schemas.add(schema);
-
         return schemas;
     }
-
 
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) {
 
         // This method is called for one of the EntityTypes that are configured in the Schema
-        if (entityTypeName.equals(ET_PRAGENT_FQN)) {
-            return ParagonRawAgentCsdlEntityTypeProvider.createType();
-        }
-
-        return null;
+        return CSDL_ENTITY_TYPE_CACHE.computeIfAbsent(entityTypeName, (key) -> {
+            if (entityTypeName.equals(ET_PRAGENT_FQN)) {
+                return ParagonRawAgentCsdlEntityTypeProvider.createType();
+            }
+            return null;
+        });
     }
 
     @Override
