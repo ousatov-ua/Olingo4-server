@@ -13,3 +13,25 @@ Please edit `/conf/context.xml` in Tomcat home directory and add Database pool:
 ```
 
 Additionally, you will need to add that driver lib to `$APACHE_HOME/lib`
+
+Next is added to catalina.sh to have tomcat running on IP V4:
+
+```shell
+JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true "
+
+```
+right before sentence:
+
+```shell
+JAVA_OPTS="$JAVA_OPTS $JSSE_OPTS"
+```
+
+Also, in `server.xml` connector is configured to have next attributes:
+
+```xml
+ <Connector port="8080"
+            
+    address="0.0.0.0"
+    useIPVHosts="true"/>        
+    
+```

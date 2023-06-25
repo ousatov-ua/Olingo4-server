@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 /**
  * Util class for creation mappings (based on event example or oracle DDL), DDLs for Aurora (based on Oracle DDL),
  * sample GG json messages
