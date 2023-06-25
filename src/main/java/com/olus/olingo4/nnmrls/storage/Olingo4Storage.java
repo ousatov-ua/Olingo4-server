@@ -28,9 +28,11 @@ public class Olingo4Storage {
     public EntityCollection getData(EdmEntitySet edmEntitySet) {
 
         EntityCollection pragentsCollection = new EntityCollection();
-        // check for which EdmEntitySet the data is requested
+
+        // Check for which EdmEntitySet the data is requested
         if (NnmrlsEdmProvider.ES_PRAGENT_NAME.equals(edmEntitySet.getName())) {
-            return DomainToEntityConverter.convertParagonRawAgentList(mybatisDao.getAllParagonRawAgents());
+            return DomainToEntityConverter.convertEntityList("ParagonRawAgents", "User_Code",
+                    mybatisDao.getAllParagonRawAgents());
         }
 
         return pragentsCollection;
@@ -45,7 +47,8 @@ public class Olingo4Storage {
                 var keyText = key.getText();
                 var result = mybatisDao.selectParagonRawAgentById(keyText);
                 if (result.isPresent()) {
-                    return Optional.of(DomainToEntityConverter.convertParagonRawAgent(result.get()));
+                    return Optional.of(DomainToEntityConverter.convertEntity("ParagonRawAgents",
+                            "User_Code", result.get()));
                 }
             }
         }

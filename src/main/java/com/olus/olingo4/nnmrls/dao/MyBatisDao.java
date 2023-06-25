@@ -22,16 +22,27 @@ public class MyBatisDao implements IDao {
     private static final Logger LOG = LoggerFactory.getLogger(MyBatisDao.class);
     private final SqlSessionFactory sqlSessionFactory;
 
+    /**
+     * Constructor
+     */
     public MyBatisDao() {
         sqlSessionFactory =
                 new SqlSessionFactoryBuilder().build(getResource());
     }
 
+    /**
+     * Get mybatis resource, created for test purpose to override it
+     *
+     * @return {@link InputStream}
+     */
     protected InputStream getResource() {
         String resource = "mybatis/mybatis-config.xml";
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Map<String, Object>> getAllParagonRawAgents() {
         try (var session = sqlSessionFactory.openSession()) {
@@ -40,6 +51,9 @@ public class MyBatisDao implements IDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Map<String, Object>> selectParagonRawAgentById(String id) {
         try (var session = sqlSessionFactory.openSession()) {

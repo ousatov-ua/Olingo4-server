@@ -70,6 +70,7 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         if (entityTypeName.equals(ET_PRAGENT_FQN)) {
 
             //create EntityType properties
+            // TODO make this load from parsed DDL
             var id = new CsdlProperty().setName("User_Code").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             var name = new CsdlProperty().setName("Active").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             var description = new CsdlProperty().setName("Goomzee").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
