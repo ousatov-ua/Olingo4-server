@@ -41,23 +41,23 @@ public class NmrlsEntityProcessor implements EntityProcessor {
     public void readEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
             throws SerializerException, ODataApplicationException {
 
-        // 1. Retrieve the Entity Type
+        // Retrieve the Entity Type
         var resourcePaths = uriInfo.getUriResourceParts();
 
         // Note: we assume that the first segment is the EntitySet
         var uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
         var edmEntitySet = uriResourceEntitySet.getEntitySet();
 
-        // 2. Retrieve the data from backend
+        // Retrieve the data from backend
         var keyPredicates = uriResourceEntitySet.getKeyPredicates();
-        var entityOpt = storage.getDataByParams(edmEntitySet, keyPredicates);
+        var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates);
         if (entityOpt.isEmpty()) {
             throw new ODataApplicationException("Entity not found", HttpStatusCode.NOT_FOUND.getStatusCode(),
                     Locale.US);
         }
         var entity = entityOpt.get();
 
-        // 3. Serialize
+        // Serialize
         var entityType = edmEntitySet.getEntityType();
 
         var contextUrl = ContextURL.with().entitySet(edmEntitySet).suffix(ContextURL.Suffix.ENTITY).build();
@@ -69,7 +69,7 @@ public class NmrlsEntityProcessor implements EntityProcessor {
         var serializerResult = serializer.entity(serviceMetadata, entityType, entity, options);
         var entityStream = serializerResult.getContent();
 
-        //4. configure the response object
+        // Configure the response object
         response.setContent(entityStream);
         response.setStatusCode(HttpStatusCode.OK.getStatusCode());
         response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());

@@ -53,57 +53,61 @@ public class NmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
                               UriInfo uriInfo, ContentType responseFormat)
             throws ODataApplicationException, SerializerException {
 
-        // 1. Retrieve info from URI
-        // 1.1. retrieve the info about the requested entity set
+        // Retrieve info from URI
+        // Retrieve the info about the requested entity set
         var resourceParts = uriInfo.getUriResourceParts();
-        // Note: only in our example we can rely that the first segment is the EntitySet
+
+        // Only in our application we can rely that the first segment is the EntitySet
         var uriEntityset = (UriResourceEntitySet) resourceParts.get(0);
         var edmEntitySet = uriEntityset.getEntitySet();
-        // the key for the entity
+
+        // The key for the entity
         var keyPredicates = uriEntityset.getKeyPredicates();
 
-        // 1.2. retrieve the requested (Edm) property
+        // Retrieve the requested (Edm) property
         var uriProperty = (UriResourceProperty) resourceParts.get(resourceParts.size() - 1); // the last segment is the Property
         var edmProperty = uriProperty.getProperty();
         var edmPropertyName = edmProperty.getName();
-        // in our example, we know we have only primitive types in our model
+
+        // We know we have only primitive types in our model
         var edmPropertyType = (EdmPrimitiveType) edmProperty.getType();
 
-
-        // 2. retrieve data from backend
-        // 2.1. retrieve the entity data, for which the property has to be read
-        var entityOpt = storage.getDataByParams(edmEntitySet, keyPredicates);
+        // Retrieve data from backend
+        // Retrieve the entity data, for which the property has to be read
+        var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates);
         if (entityOpt.isEmpty()) { // Bad request
             throw new ODataApplicationException("Entity not found", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
         }
 
         var entity = entityOpt.get();
 
-        // 2.2. retrieve the property data from the entity
+        // Retrieve the property data from the entity
         var property = entity.getProperty(edmPropertyName);
         if (property == null) {
             throw new ODataApplicationException("Property not found", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
         }
 
-        // 3. serialize
+        // Serialize
         var value = property.getValue();
         if (value != null) {
 
-            // 3.1. configure the serializer
+            // Configure the serializer
             var serializer = odata.createSerializer(responseFormat);
 
             var contextUrl = ContextURL.with().entitySet(edmEntitySet).navOrPropertyPath(edmPropertyName).build();
             var options = PrimitiveSerializerOptions.with().contextURL(contextUrl).build();
-            // 3.2. serialize
+
+            // Serialize
             var serializerResult = serializer.primitive(serviceMetadata, edmPropertyType, property, options);
             var propertyStream = serializerResult.getContent();
 
-            //4. configure the response object
+            // Configure the response object
             response.setContent(propertyStream);
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
         } else {
-            // in case there's no value for the property, we can skip the serialization
+
+            // In case there's no value for the property, we can skip the serialization
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
         }
     }

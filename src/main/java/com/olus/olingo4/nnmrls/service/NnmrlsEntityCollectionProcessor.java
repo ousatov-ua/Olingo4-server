@@ -50,9 +50,9 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
     public void readEntityCollection(ODataRequest request, ODataResponse response, UriInfo uriInfo,
                                      ContentType responseFormat) throws SerializerException {
 
-        // 1st we have retrieve the requested EntitySet from the uriInfo object (representation of the parsed service URI)
+        // We have retrieve the requested EntitySet from the uriInfo object (representation of the parsed service URI)
         var resourcePaths = uriInfo.getUriResourceParts();
-        var uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0); // in our example, the first segment is the EntitySet
+        var uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0); // in our app, the first segment is the EntitySet
         var edmEntitySet = uriResourceEntitySet.getEntitySet();
 
         int offset = -1;
@@ -66,13 +66,13 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
             limit = topOption.getValue();
         }
 
-        // 2nd: fetch the data from backend for this requested EntitySetName // it has to be delivered as EntitySet object
+        // Fetch the data from backend for this requested EntitySetName // it has to be delivered as EntitySet object
         var entitySet = storage.getData(edmEntitySet, offset, limit);
 
-        // 3rd: create a serializer based on the requested format (json)
+        // Create a serializer based on the requested format (json)
         var serializer = odata.createSerializer(responseFormat);
 
-        // 4th: Now serialize the content: transform from the EntitySet object to InputStream
+        // Now serialize the content: transform from the EntitySet object to InputStream
         var edmEntityType = edmEntitySet.getEntityType();
         var contextUrl = ContextURL.with().entitySet(edmEntitySet).build();
 

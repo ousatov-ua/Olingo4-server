@@ -2,8 +2,8 @@ package com.olus.olingo4.nnmrls.web;
 
 import com.olus.olingo4.nnmrls.service.NmrlsEntityPrimitiveProcessor;
 import com.olus.olingo4.nnmrls.service.NmrlsEntityProcessor;
-import com.olus.olingo4.nnmrls.service.NnmrlsEdmProvider;
 import com.olus.olingo4.nnmrls.service.NnmrlsEntityCollectionProcessor;
+import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
 import com.olus.olingo4.nnmrls.storage.Olingo4Storage;
 import org.apache.olingo.server.api.OData;
 import org.slf4j.Logger;

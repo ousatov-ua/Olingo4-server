@@ -11,6 +11,7 @@ import java.util.Map;
  * @author Oleksii Usatov
  */
 public interface ParagonRawAgentMapper {
+    String PK_KEY = "User_Code";
 
     List<Map<String, Object>> selectParagonRawAgentsLimited();
 

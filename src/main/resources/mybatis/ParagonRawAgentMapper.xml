@@ -3,18 +3,18 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.olus.olingo4.nnmrls.dao.mappers.ParagonRawAgentMapper">
     <select id="selectParagonRawAgents" resultType="map">
-        select User_Code, Active, Goomzee
+        select *
         from ParagonRawAgent
     </select>
 
     <select id="selectParagonRawAgentsLimited" resultType="map">
-        select User_Code, Active, Goomzee
+        select *
         from ParagonRawAgent
         limit 20
     </select>
 
     <select id="selectParagonRawAgentById" resultType="map">
-        select User_Code, Active, Goomzee
+        select *
         from ParagonRawAgent where User_Code=#{id}
     </select>
 </mapper>
