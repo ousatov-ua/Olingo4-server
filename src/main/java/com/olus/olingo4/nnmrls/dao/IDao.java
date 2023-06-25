@@ -16,7 +16,7 @@ public interface IDao {
      *
      * @return list of agents
      */
-    List<Map<String, Object>> getAllParagonRawAgents();
+    List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit);
 
     /**
      * Fetch specific ParagonRawAgent

@@ -5,7 +5,12 @@
     <select id="selectParagonRawAgents" resultType="map">
         select User_Code, Active, Goomzee
         from ParagonRawAgent
-        LIMIT 10
+    </select>
+
+    <select id="selectParagonRawAgentsLimited" resultType="map">
+        select User_Code, Active, Goomzee
+        from ParagonRawAgent
+        limit 20
     </select>
 
     <select id="selectParagonRawAgentById" resultType="map">

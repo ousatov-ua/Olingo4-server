@@ -1,6 +1,7 @@
 package com.olus.olingo4.nnmrls.dao;
 
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawAgentMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
@@ -44,10 +45,16 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Map<String, Object>> getAllParagonRawAgents() {
+    public List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            return subscriberMapper.selectParagonRawAgents();
+            if (offset == -1 && limit == -1) {
+
+                // We don't want to return all agents - it will be too hard
+                return subscriberMapper.selectParagonRawAgentsLimited();
+            }
+            var rowBounds = new RowBounds(offset, limit);
+            return subscriberMapper.selectParagonRawAgents(rowBounds);
         }
     }
 

@@ -26,7 +26,7 @@ public class DomainToEntityConverter {
     }
 
     public static EntityCollection convertEntityList(String collectionName, String keyName,
-                                                              List<Map<String, Object>> list) {
+                                                     List<Map<String, Object>> list) {
         var pragentsCollection = new EntityCollection();
         var pragentList = pragentsCollection.getEntities();
         list.forEach(data -> pragentList.add(convertEntity(collectionName, keyName, data)));

@@ -14,6 +14,8 @@ import org.apache.olingo.server.api.serializer.EntityCollectionSerializerOptions
 import org.apache.olingo.server.api.serializer.SerializerException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.apache.olingo.server.api.uri.queryoption.SkipOption;
+import org.apache.olingo.server.api.uri.queryoption.TopOption;
 
 /**
  * This class is invoked by the Olingo framework when the the OData service is invoked order to display a list/collection of data (entities).
@@ -53,8 +55,19 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
         var uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0); // in our example, the first segment is the EntitySet
         var edmEntitySet = uriResourceEntitySet.getEntitySet();
 
+        int offset = -1;
+        SkipOption skipOption = uriInfo.getSkipOption();
+        if (skipOption != null) {
+            offset = skipOption.getValue();
+        }
+        int limit = -1;
+        TopOption topOption = uriInfo.getTopOption();
+        if (topOption != null) {
+            limit = topOption.getValue();
+        }
+
         // 2nd: fetch the data from backend for this requested EntitySetName // it has to be delivered as EntitySet object
-        var entitySet = storage.getData(edmEntitySet);
+        var entitySet = storage.getData(edmEntitySet, offset, limit);
 
         // 3rd: create a serializer based on the requested format (json)
         var serializer = odata.createSerializer(responseFormat);

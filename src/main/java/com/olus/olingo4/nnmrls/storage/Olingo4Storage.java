@@ -25,14 +25,14 @@ public class Olingo4Storage {
      * @param edmEntitySet for which the data is requested
      * @return data of requested entity set
      */
-    public EntityCollection getData(EdmEntitySet edmEntitySet) {
+    public EntityCollection getData(EdmEntitySet edmEntitySet, int offset, int limit) {
 
-        EntityCollection pragentsCollection = new EntityCollection();
+        var pragentsCollection = new EntityCollection();
 
         // Check for which EdmEntitySet the data is requested
         if (NnmrlsEdmProvider.ES_PRAGENT_NAME.equals(edmEntitySet.getName())) {
             return DomainToEntityConverter.convertEntityList("ParagonRawAgents", "User_Code",
-                    mybatisDao.getAllParagonRawAgents());
+                    mybatisDao.getAllParagonRawAgents(offset, limit));
         }
 
         return pragentsCollection;
