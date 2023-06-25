@@ -18,6 +18,7 @@ import java.util.Optional;
  * @author Oleksii Usatov
  */
 public class MyBatisDao implements IDao {
+    private static final int DEFAULT_ROW_LIMIT = 30;
 
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(MyBatisDao.class);
@@ -48,10 +49,11 @@ public class MyBatisDao implements IDao {
     public List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            if (offset == -1 && limit == -1) {
-
-                // We don't want to return all agents - it will be too hard
-                return subscriberMapper.selectParagonRawAgentsLimited();
+            if (offset == -1) {
+                offset = 0;
+            }
+            if (limit == -1) {
+                limit = DEFAULT_ROW_LIMIT;
             }
             var rowBounds = new RowBounds(offset, limit);
             return subscriberMapper.selectParagonRawAgents(rowBounds);

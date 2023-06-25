@@ -7,12 +7,6 @@
         from ParagonRawAgent
     </select>
 
-    <select id="selectParagonRawAgentsLimited" resultType="map">
-        select *
-        from ParagonRawAgent
-        limit 20
-    </select>
-
     <select id="selectParagonRawAgentById" resultType="map">
         select *
         from ParagonRawAgent where User_Code=#{id}

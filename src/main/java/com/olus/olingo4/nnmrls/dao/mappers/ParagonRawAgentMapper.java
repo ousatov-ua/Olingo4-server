@@ -13,8 +13,6 @@ import java.util.Map;
 public interface ParagonRawAgentMapper {
     String PK_KEY = "User_Code";
 
-    List<Map<String, Object>> selectParagonRawAgentsLimited();
-
     List<Map<String, Object>> selectParagonRawAgents(RowBounds rb);
 
     Map<String, Object> selectParagonRawAgentById(String id);
