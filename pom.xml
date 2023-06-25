@@ -5,7 +5,7 @@
     <groupId>com.olus.olingo4</groupId>
     <artifactId>nnmrls</artifactId>
     <packaging>war</packaging>
-    <version>4.9.0</version>
+    <version>1.0.0</version>
 
     <name>${project.artifactId}-Webapp</name>
 
