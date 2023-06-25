@@ -23,7 +23,7 @@ public class ParagonRawAgentCsdlEntityTypeProvider {
     private static final Map<String, CsdlEntityType> cache = new ConcurrentHashMap<>();
 
     public static CsdlEntityType createType() {
-        return cache.computeIfAbsent(PARAGON_RAW_AGENT_KEY, (PARAGON_RAW_AGENT_KEY) -> {
+        return cache.computeIfAbsent(PARAGON_RAW_AGENT_KEY, (key) -> {
 
             // Create EntityType properties - Please use DdlUtil to generate code !!!!
             var property_0 = new CsdlProperty().setName("User_Code").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
