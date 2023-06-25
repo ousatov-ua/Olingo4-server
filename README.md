@@ -11,3 +11,5 @@ Please edit `/conf/context.xml` in Tomcat home directory and add Database pool:
                url="jdbc:mysql://server:3306/schema"/>
 
 ```
+
+Additionally, you will need to add that driver lib to `$APACHE_HOME/lib`
