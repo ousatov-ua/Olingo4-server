@@ -10,7 +10,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class DomainToEntityConverter {
 
@@ -32,9 +31,7 @@ public class DomainToEntityConverter {
     public static EntityCollection convertParagonRawAgentList(List<Map<String, Object>> list) {
         EntityCollection pragentsCollection = new EntityCollection();
         List<Entity> pragentList = pragentsCollection.getEntities();
-        list.forEach(data -> {
-            pragentList.add(convertParagonRawAgent(data));
-        });
+        list.forEach(data -> pragentList.add(convertParagonRawAgent(data)));
         return pragentsCollection;
     }
 

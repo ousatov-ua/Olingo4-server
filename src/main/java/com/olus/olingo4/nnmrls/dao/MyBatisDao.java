@@ -33,9 +33,9 @@ public class MyBatisDao implements IDao {
 
     @Override
     public List<Map<String, Object>> getAllParagonRawAgents() {
-        try(var session = sqlSessionFactory.openSession()){
-           var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-           return subscriberMapper.selectParagonRawAgents();
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
+            return subscriberMapper.selectParagonRawAgents();
         }
     }
 }

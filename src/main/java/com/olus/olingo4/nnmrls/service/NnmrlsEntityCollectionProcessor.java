@@ -1,16 +1,9 @@
 package com.olus.olingo4.nnmrls.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
 import com.olus.olingo4.nnmrls.dao.MyBatisDao;
 import com.olus.olingo4.nnmrls.util.DomainToEntityConverter;
 import org.apache.olingo.commons.api.data.ContextURL;
-import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
-import org.apache.olingo.commons.api.data.Property;
-import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
@@ -29,6 +22,10 @@ import org.apache.olingo.server.api.serializer.SerializerResult;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * This class is invoked by the Olingo framework when the the OData service is invoked order to display a list/collection of data (entities).
