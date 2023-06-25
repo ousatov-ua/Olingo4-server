@@ -69,7 +69,7 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         // this method is called for one of the EntityTypes that are configured in the Schema
         if (entityTypeName.equals(ET_PRAGENT_FQN)) {
 
-            //create EntityType properties
+            // Create EntityType properties
             // TODO make this load from parsed DDL
             var id = new CsdlProperty().setName("User_Code").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             var name = new CsdlProperty().setName("Active").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
