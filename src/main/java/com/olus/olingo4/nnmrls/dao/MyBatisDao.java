@@ -5,7 +5,6 @@ import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingFeaturesMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawOfficeMapper;
-import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
@@ -46,21 +45,15 @@ public class MyBatisDao implements IDao {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     }
 
-    /**
-     * Create {@link RowBounds}
-     *
-     * @param offset offset (aka skip)
-     * @param limit  limit (aka top)
-     * @return {@link RowBounds}
-     */
-    private static RowBounds createRowBounds(int offset, int limit) {
-        if (offset == -1) {
-            offset = 0;
+    private static int offset(int offset) {
+        return Math.max(offset, 0);
+    }
+
+    private static int limit(int limit) {
+        if (limit <= 0) {
+            return DEFAULT_ROW_LIMIT;
         }
-        if (limit == -1) {
-            limit = DEFAULT_ROW_LIMIT;
-        }
-        return new RowBounds(offset, limit);
+        return limit;
     }
 
     /**
@@ -70,7 +63,7 @@ public class MyBatisDao implements IDao {
     public List<Map<String, Object>> selectAllParagonRawAgents(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            return subscriberMapper.selectParagonRawAgents(createRowBounds(offset, limit));
+            return subscriberMapper.selectParagonRawAgents(offset(offset), limit(limit));
         }
     }
 
@@ -81,7 +74,7 @@ public class MyBatisDao implements IDao {
     public List<Map<String, Object>> selectAllParagonRawOffices(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
-            return subscriberMapper.selectParagonRawOffices(createRowBounds(offset, limit));
+            return subscriberMapper.selectParagonRawOffices(offset(offset), limit(limit));
         }
     }
 
@@ -92,7 +85,7 @@ public class MyBatisDao implements IDao {
     public List<Map<String, Object>> selectAllParagonRawListings(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
-            return subscriberMapper.selectParagonRawListings(createRowBounds(offset, limit));
+            return subscriberMapper.selectParagonRawListings(offset(offset), limit(limit));
         }
     }
 
@@ -133,7 +126,7 @@ public class MyBatisDao implements IDao {
     public List<Map<String, Object>> selectAllParagonRawListingFeatures(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
-            return subscriberMapper.selectParagonRawListingFeatures(createRowBounds(offset, limit));
+            return subscriberMapper.selectParagonRawListingFeatures(offset(offset), limit(limit));
         }
     }
 
@@ -189,7 +182,7 @@ public class MyBatisDao implements IDao {
     public List<Map<String, Object>> selectAllParagonRawListingRemarks(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
-            return subscriberMapper.selectParagonRawListingRemarks(createRowBounds(offset, limit));
+            return subscriberMapper.selectParagonRawListingRemarks(offset(offset), limit(limit));
         }
     }
 

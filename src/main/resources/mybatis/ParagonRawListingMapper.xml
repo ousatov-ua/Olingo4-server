@@ -2,9 +2,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper">
-    <select id="selectParagonRawListings" resultType="map">
+    <select id="selectParagonRawListings" resultType="map" resultSetType="SCROLL_SENSITIVE">
         select *
-        from ParagonRawListing
+        from ParagonRawListing LIMIT #{param1}, #{param2}
     </select>
 
     <select id="selectParagonRawListingById" resultType="map">

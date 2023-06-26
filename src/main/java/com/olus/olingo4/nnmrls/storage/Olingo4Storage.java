@@ -32,27 +32,10 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PROF
  * @author Oleksii Usatov
  */
 public class Olingo4Storage {
-    private static final boolean TURN_ON_SELECT_LISTINGS = false;
-    private static final boolean TURN_ON_SELECT_LISTING_FEATURES = false;
-
-    private static final int LIMIT_OF_TOP_FOR_HEAVY_TABLES = 2;
-
     private final MyBatisDao mybatisDao;
 
     public Olingo4Storage() {
         this.mybatisDao = new MyBatisDao();
-    }
-
-    private static void validateLimit(int limit) throws ODataApplicationException {
-        if (limit > LIMIT_OF_TOP_FOR_HEAVY_TABLES) {
-            throw new ODataApplicationException("Not supported 'top' more than " + LIMIT_OF_TOP_FOR_HEAVY_TABLES,
-                    HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ROOT);
-        }
-        if (limit <= 0) {
-            throw new ODataApplicationException("Please specify 'top'! It can have value no more tno more than "
-                    + LIMIT_OF_TOP_FOR_HEAVY_TABLES,
-                    HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ROOT);
-        }
     }
 
     /**
@@ -91,22 +74,14 @@ public class Olingo4Storage {
                         ParagonRawOfficeMapper.PK_KEY,
                         mybatisDao.selectAllParagonRawOffices(offset, limit));
             case ES_PRLISTING_NAME:
-                if (TURN_ON_SELECT_LISTINGS) {
                     return Olingo4Converter.convertListOfMaps(ES_PRLISTING_NAME,
                             ParagonRawListingMapper.PK_KEY,
                             mybatisDao.selectAllParagonRawListings(offset, limit));
-                }
-                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
             case ES_PRLISTING_FEATURES_NAME:
-                if (TURN_ON_SELECT_LISTING_FEATURES) {
-                    validateLimit(limit);
                     return Olingo4Converter.convertListOfMaps(ES_PRLISTING_FEATURES_NAME,
                             ParagonRawListingFeaturesMapper.PK_KEY,
                             mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
-                }
-                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
             case ES_PRLISTING_REMARKS_NAME:
-                validateLimit(limit);
                 return Olingo4Converter.convertListOfMaps(ES_PRLISTING_REMARKS_NAME,
                         ParagonRawListingRemarksMapper.PK_KEY,
                         mybatisDao.selectAllParagonRawListingRemarks(offset, limit));

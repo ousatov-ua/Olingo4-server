@@ -1,7 +1,5 @@
 package com.olus.olingo4.nnmrls.dao.mappers;
 
-import org.apache.ibatis.session.RowBounds;
-
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +11,7 @@ import java.util.Map;
 public interface ParagonRawOfficeMapper {
     String PK_KEY = "Office_Abbreviation";
 
-    List<Map<String, Object>> selectParagonRawOffices(RowBounds rb);
+    List<Map<String, Object>> selectParagonRawOffices(int offset, int limit);
 
     Map<String, Object> selectParagonRawOfficeById(String id);
 }

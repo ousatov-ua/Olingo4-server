@@ -1,7 +1,5 @@
 package com.olus.olingo4.nnmrls.dao.mappers;
 
-import org.apache.ibatis.session.RowBounds;
-
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +13,5 @@ public interface ParagonRawListingFeaturesMapper {
 
     Map<String, Object> selectParagonRawListingFeaturesById(String id);
 
-    List<Map<String, Object>> selectParagonRawListingFeatures(RowBounds rb);
+    List<Map<String, Object>> selectParagonRawListingFeatures(int offset, int limit);
 }
