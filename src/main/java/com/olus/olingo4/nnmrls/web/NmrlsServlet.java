@@ -5,9 +5,8 @@ import com.olus.olingo4.nnmrls.service.NmrlsEntityProcessor;
 import com.olus.olingo4.nnmrls.service.NnmrlsEntityCollectionProcessor;
 import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
 import com.olus.olingo4.nnmrls.storage.Olingo4Storage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.olingo.server.api.OData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,10 +22,10 @@ import java.util.ArrayList;
  *
  * @author Oleksii Usatov
  */
+@Slf4j
 public class NmrlsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = LoggerFactory.getLogger(NmrlsServlet.class);
 
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
@@ -50,7 +49,7 @@ public class NmrlsServlet extends HttpServlet {
             // Let the handler do the work
             handler.process(req, resp);
         } catch (RuntimeException e) {
-            LOG.error("Server Error occurred in ExampleServlet", e);
+            log.error("Server Error occurred in ExampleServlet", e);
             throw new ServletException(e);
         }
     }

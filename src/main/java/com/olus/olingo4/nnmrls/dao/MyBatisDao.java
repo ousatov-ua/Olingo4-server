@@ -47,21 +47,6 @@ public class MyBatisDao implements IDao {
     }
 
     /**
-     * We need this because we'll receive string with "''" -  Olingo requires to specify string key with quotes,
-     * e.g. 'some_id'
-     *
-     * @param id original Id received from request
-     * @return Key without quotes
-     */
-    private static String getKeyValue(String id) {
-        var key = id;
-        if (id.length() >= 3) {
-            key = id.substring(1, id.length() - 1);
-        }
-        return key;
-    }
-
-    /**
      * Create {@link RowBounds}
      *
      * @param offset offset (aka skip)
@@ -82,7 +67,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit) {
+    public List<Map<String, Object>> selectAllParagonRawAgents(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
             return subscriberMapper.selectParagonRawAgents(createRowBounds(offset, limit));
@@ -93,7 +78,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Map<String, Object>> getAllParagonRawOffices(int offset, int limit) {
+    public List<Map<String, Object>> selectAllParagonRawOffices(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
             return subscriberMapper.selectParagonRawOffices(createRowBounds(offset, limit));
@@ -104,7 +89,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Map<String, Object>> getAllParagonRawListings(int offset, int limit) {
+    public List<Map<String, Object>> selectAllParagonRawListings(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
             return subscriberMapper.selectParagonRawListings(createRowBounds(offset, limit));
@@ -118,7 +103,7 @@ public class MyBatisDao implements IDao {
     public Optional<Map<String, Object>> selectParagonRawListingById(String id) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
-            var result = subscriberMapper.selectParagonRawListingById(getKeyValue(id));
+            var result = subscriberMapper.selectParagonRawListingById(id);
             if (result == null) {
                 return Optional.empty();
             }
@@ -133,7 +118,7 @@ public class MyBatisDao implements IDao {
     public Optional<Map<String, Object>> selectParagonRawListingFeaturesById(String id) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
-            var result = subscriberMapper.selectParagonRawListingFeaturesById(getKeyValue(id));
+            var result = subscriberMapper.selectParagonRawListingFeaturesById(id);
             if (result == null) {
                 return Optional.empty();
             }
@@ -145,7 +130,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Map<String, Object>> getAllParagonRawListingFeatures(int offset, int limit) {
+    public List<Map<String, Object>> selectAllParagonRawListingFeatures(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
             return subscriberMapper.selectParagonRawListingFeatures(createRowBounds(offset, limit));
@@ -159,7 +144,7 @@ public class MyBatisDao implements IDao {
     public Optional<Map<String, Object>> selectParagonRawAgentById(String id) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            var result = subscriberMapper.selectParagonRawAgentById(getKeyValue(id));
+            var result = subscriberMapper.selectParagonRawAgentById(id);
             if (result == null) {
                 return Optional.empty();
             }
@@ -174,7 +159,7 @@ public class MyBatisDao implements IDao {
     public Optional<Map<String, Object>> selectParagonRawOfficeById(String id) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
-            var result = subscriberMapper.selectParagonRawOfficeById(getKeyValue(id));
+            var result = subscriberMapper.selectParagonRawOfficeById(id);
             if (result == null) {
                 return Optional.empty();
             }
@@ -189,7 +174,7 @@ public class MyBatisDao implements IDao {
     public Optional<Map<String, Object>> selectParagonRawListingRemarksById(String id) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
-            var result = subscriberMapper.selectParagonRawListingRemarksById(getKeyValue(id));
+            var result = subscriberMapper.selectParagonRawListingRemarksById(id);
             if (result == null) {
                 return Optional.empty();
             }
@@ -201,7 +186,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Map<String, Object>> getAllParagonRawListingRemarks(int offset, int limit) {
+    public List<Map<String, Object>> selectAllParagonRawListingRemarks(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
             return subscriberMapper.selectParagonRawListingRemarks(createRowBounds(offset, limit));

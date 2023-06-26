@@ -52,6 +52,21 @@ public class Olingo4Storage {
     }
 
     /**
+     * We need this because we'll receive string with "''" -  Olingo requires to specify string key with quotes,
+     * e.g. 'some_id'
+     *
+     * @param id original Id received from request
+     * @return Key without quotes
+     */
+    private static String getKeyValue(String id) {
+        var key = id;
+        if (id.length() >= 3) {
+            key = id.substring(1, id.length() - 1);
+        }
+        return key;
+    }
+
+    /**
      * Fetch data for specified offset and limit ('skip' and 'top')
      *
      * @param edmEntitySet for which the data is requested
@@ -65,25 +80,25 @@ public class Olingo4Storage {
         if (ES_PRAGENT_NAME.equals(edmEntitySet.getName())) {
             return DomainToEntityConverter.convertEntityList(ES_PRAGENT_NAME,
                     ParagonRawAgentMapper.PK_KEY,
-                    mybatisDao.getAllParagonRawAgents(offset, limit));
+                    mybatisDao.selectAllParagonRawAgents(offset, limit));
         } else if (ES_PROFFICE_NAME.equals(edmEntitySet.getName())) {
             return DomainToEntityConverter.convertEntityList(ES_PROFFICE_NAME,
                     ParagonRawOfficeMapper.PK_KEY,
-                    mybatisDao.getAllParagonRawOffices(offset, limit));
+                    mybatisDao.selectAllParagonRawOffices(offset, limit));
         } else if (ES_PRLISTING_NAME.equals(edmEntitySet.getName())) {
             return DomainToEntityConverter.convertEntityList(ES_PRLISTING_NAME,
                     ParagonRawListingMapper.PK_KEY,
-                    mybatisDao.getAllParagonRawListings(offset, limit));
+                    mybatisDao.selectAllParagonRawListings(offset, limit));
         } else if (ES_PRLISTING_FEATURES_NAME.equals(edmEntitySet.getName())) {
             validateLimit(limit);
             return DomainToEntityConverter.convertEntityList(ES_PRLISTING_FEATURES_NAME,
                     ParagonRawListingFeaturesMapper.PK_KEY,
-                    mybatisDao.getAllParagonRawListingFeatures(offset, limit));
+                    mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
         } else if (ES_PRLISTING_REMARKS_NAME.equals(edmEntitySet.getName())) {
             validateLimit(limit);
             return DomainToEntityConverter.convertEntityList(ES_PRLISTING_REMARKS_NAME,
                     ParagonRawListingRemarksMapper.PK_KEY,
-                    mybatisDao.getAllParagonRawListingRemarks(offset, limit));
+                    mybatisDao.selectAllParagonRawListingRemarks(offset, limit));
         }
         return pragentsCollection;
     }
@@ -101,7 +116,7 @@ public class Olingo4Storage {
         switch (edmEntityType.getName()) {
             case NnmrlsEdmProvider.ET_PRAGENT_NAME:
                 for (final UriParameter key : keyParams) {
-                    var keyText = key.getText();
+                    var keyText = getKeyValue(key.getText());
 
                     // We have a single PK
                     var result = mybatisDao.selectParagonRawAgentById(keyText);
@@ -113,7 +128,7 @@ public class Olingo4Storage {
                 break;
             case NnmrlsEdmProvider.ET_PROFFICE_NAME:
                 for (final UriParameter key : keyParams) {
-                    var keyText = key.getText();
+                    var keyText = getKeyValue(key.getText());
 
                     // We have a single PK
                     var result = mybatisDao.selectParagonRawOfficeById(keyText);
@@ -125,7 +140,7 @@ public class Olingo4Storage {
                 break;
             case NnmrlsEdmProvider.ET_PRLISTING_NAME:
                 for (final UriParameter key : keyParams) {
-                    var keyText = key.getText();
+                    var keyText = getKeyValue(key.getText());
 
                     // We have a single PK
                     var result = mybatisDao.selectParagonRawListingById(keyText);
@@ -137,7 +152,7 @@ public class Olingo4Storage {
                 break;
             case NnmrlsEdmProvider.ET_PRLISTING_FEATURES_NAME:
                 for (final UriParameter key : keyParams) {
-                    var keyText = key.getText();
+                    var keyText = getKeyValue(key.getText());
 
                     // We have a single PK
                     var result = mybatisDao.selectParagonRawListingFeaturesById(keyText);
@@ -149,7 +164,7 @@ public class Olingo4Storage {
                 break;
             case NnmrlsEdmProvider.ET_PRLISTING_REMARKS_NAME:
                 for (final UriParameter key : keyParams) {
-                    var keyText = key.getText();
+                    var keyText = getKeyValue(key.getText());
 
                     // We have a single PK
                     var result = mybatisDao.selectParagonRawListingRemarksById(keyText);

@@ -18,7 +18,7 @@ public interface IDao {
      * @param limit  limit (aka top)
      * @return list of agents
      */
-    List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit);
+    List<Map<String, Object>> selectAllParagonRawAgents(int offset, int limit);
 
     /**
      * Fetch specific ParagonRawAgent
@@ -35,7 +35,7 @@ public interface IDao {
      * @param limit  limit (aka top)
      * @return list of offices
      */
-    List<Map<String, Object>> getAllParagonRawOffices(int offset, int limit);
+    List<Map<String, Object>> selectAllParagonRawOffices(int offset, int limit);
 
     /**
      * Fetch specific ParagonRawOffice
@@ -52,7 +52,7 @@ public interface IDao {
      * @param limit  limit (aka top)
      * @return list of listings
      */
-    List<Map<String, Object>> getAllParagonRawListings(int offset, int limit);
+    List<Map<String, Object>> selectAllParagonRawListings(int offset, int limit);
 
     /**
      * Fetch specific ParagonRawListing
@@ -77,7 +77,7 @@ public interface IDao {
      * @param limit  limit (aka top)
      * @return list of features
      */
-    List<Map<String, Object>> getAllParagonRawListingFeatures(int offset, int limit);
+    List<Map<String, Object>> selectAllParagonRawListingFeatures(int offset, int limit);
 
     /**
      * Fetch specific ParagonRawListingRemarks
@@ -95,5 +95,5 @@ public interface IDao {
      * @param limit  limit (aka top)
      * @return list of remarks
      */
-    List<Map<String, Object>> getAllParagonRawListingRemarks(int offset, int limit);
+    List<Map<String, Object>> selectAllParagonRawListingRemarks(int offset, int limit);
 }

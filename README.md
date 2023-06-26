@@ -35,3 +35,13 @@ Also, in `server.xml` connector is configured to have next attributes:
     useIPVHosts="true"/>        
     
 ```
+
+## Functional tests
+
+Currently, we are using embedded DB. It needs ncurses lib installed.
+
+For Ubuntu:
+
+```shell
+sudo apt-get install libncurses5
+```

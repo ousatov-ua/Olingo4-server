@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeHandlers>
+        <typeHandler handler="com.olus.olingo4.nnmrls.mybatis.handlers.CustomLocalDateTimeHandler"/>
+    </typeHandlers>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:49152/test"/>
+                <property name="username" value="root"/>
+                <property name="password" value=""/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="mybatis/ParagonRawAgentMapper.xml"/>
+        <mapper resource="mybatis/ParagonRawOfficeMapper.xml"/>
+        <mapper resource="mybatis/ParagonRawListingMapper.xml"/>
+        <mapper resource="mybatis/ParagonRawListingFeaturesMapper.xml"/>
+        <mapper resource="mybatis/ParagonRawListingRemarksMapper.xml"/>
+    </mappers>
+</configuration>

@@ -1,6 +1,5 @@
 package com.olus.olingo4.nmrls.util;
 
-import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -9,7 +8,6 @@ import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.Map;
@@ -46,10 +44,10 @@ public class DdlUtil {
     @SuppressWarnings("unused")
     private static void createMappings() {
 
-        Set.of("ParagonRawListingRemarks.sql")
+        Set.of("ddl/ParagonRawListingRemarks.sql")
                 .forEach(dbSqlFile -> {
                     try {
-                        generateSourceCode(getFileContent(dbSqlFile));
+                        generateSourceCode(FileUtil.getFileContent(dbSqlFile));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -91,16 +89,5 @@ public class DdlUtil {
                     String.join(",", properties)));
             fileWriter.write("\n");
         }
-    }
-
-    /**
-     * Load content for specified file path
-     *
-     * @param filePath file path
-     * @return content
-     * @throws IOException exception
-     */
-    private static String getFileContent(String filePath) throws IOException {
-        return Resources.toString(Resources.getResource(filePath), StandardCharsets.UTF_8).trim();
     }
 }
