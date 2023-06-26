@@ -81,34 +81,36 @@ public class Olingo4Storage {
         var pragentsCollection = new EntityCollection();
 
         // Check for which EdmEntitySet the data is requested
-        if (ES_PRAGENT_NAME.equals(edmEntitySet.getName())) {
-            return Olingo4Converter.convertListOfMaps(ES_PRAGENT_NAME,
-                    ParagonRawAgentMapper.PK_KEY,
-                    mybatisDao.selectAllParagonRawAgents(offset, limit));
-        } else if (ES_PROFFICE_NAME.equals(edmEntitySet.getName())) {
-            return Olingo4Converter.convertListOfMaps(ES_PROFFICE_NAME,
-                    ParagonRawOfficeMapper.PK_KEY,
-                    mybatisDao.selectAllParagonRawOffices(offset, limit));
-        } else if (ES_PRLISTING_NAME.equals(edmEntitySet.getName())) {
-            if (TURN_ON_SELECT_LISTINGS) {
-                return Olingo4Converter.convertListOfMaps(ES_PRLISTING_NAME,
-                        ParagonRawListingMapper.PK_KEY,
-                        mybatisDao.selectAllParagonRawListings(offset, limit));
-            }
-            throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
-        } else if (ES_PRLISTING_FEATURES_NAME.equals(edmEntitySet.getName())) {
-            if (TURN_ON_SELECT_LISTING_FEATURES) {
+        switch (edmEntitySet.getName()) {
+            case ES_PRAGENT_NAME:
+                return Olingo4Converter.convertListOfMaps(ES_PRAGENT_NAME,
+                        ParagonRawAgentMapper.PK_KEY,
+                        mybatisDao.selectAllParagonRawAgents(offset, limit));
+            case ES_PROFFICE_NAME:
+                return Olingo4Converter.convertListOfMaps(ES_PROFFICE_NAME,
+                        ParagonRawOfficeMapper.PK_KEY,
+                        mybatisDao.selectAllParagonRawOffices(offset, limit));
+            case ES_PRLISTING_NAME:
+                if (TURN_ON_SELECT_LISTINGS) {
+                    return Olingo4Converter.convertListOfMaps(ES_PRLISTING_NAME,
+                            ParagonRawListingMapper.PK_KEY,
+                            mybatisDao.selectAllParagonRawListings(offset, limit));
+                }
+                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+            case ES_PRLISTING_FEATURES_NAME:
+                if (TURN_ON_SELECT_LISTING_FEATURES) {
+                    validateLimit(limit);
+                    return Olingo4Converter.convertListOfMaps(ES_PRLISTING_FEATURES_NAME,
+                            ParagonRawListingFeaturesMapper.PK_KEY,
+                            mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
+                }
+                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+            case ES_PRLISTING_REMARKS_NAME:
                 validateLimit(limit);
-                return Olingo4Converter.convertListOfMaps(ES_PRLISTING_FEATURES_NAME,
-                        ParagonRawListingFeaturesMapper.PK_KEY,
-                        mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
-            }
-            throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
-        } else if (ES_PRLISTING_REMARKS_NAME.equals(edmEntitySet.getName())) {
-            validateLimit(limit);
-            return Olingo4Converter.convertListOfMaps(ES_PRLISTING_REMARKS_NAME,
-                    ParagonRawListingRemarksMapper.PK_KEY,
-                    mybatisDao.selectAllParagonRawListingRemarks(offset, limit));
+                return Olingo4Converter.convertListOfMaps(ES_PRLISTING_REMARKS_NAME,
+                        ParagonRawListingRemarksMapper.PK_KEY,
+                        mybatisDao.selectAllParagonRawListingRemarks(offset, limit));
+
         }
         return pragentsCollection;
     }
