@@ -96,4 +96,12 @@ public interface IDao {
      * @return list of remarks
      */
     List<Map<String, Object>> selectAllParagonRawListingRemarks(int offset, int limit);
+
+    /**
+     * Insert ParagonRawAgent
+     *
+     * @param data {@link Map}
+     * @return {@link Map}
+     */
+    Map<String, Object> insertParagonRawAgent(Map<String, Object> data);
 }

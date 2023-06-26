@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -97,6 +99,37 @@ class MyBatisDaoTest extends FuncDbTest {
         assertEquals(3, agent1.get("Agent_Office_ID"));
         assertEquals("2003-05-03", agent1.get("Agent_License_Date").toString());
         assertEquals("Hello text 2", new String((byte[]) agent1.get("Agent_Phone5_CountryId")));
+    }
+
+    @Test
+    void testInsertParagonRawAgent(){
+
+        // Setup
+        var request = Map.of(
+                "User_Code", "Test",
+                "Active", "A",
+                "Goomzee", "B",
+                "UPLogo_image_Timestamp", (Object)Timestamp.valueOf("2017-02-23 01:02:03")
+        );
+
+        // Execute
+        var agent = myBatisDao.insertParagonRawAgent(request);
+
+        // Verify
+        assertEquals("Test", agent.get("User_Code"));
+        assertEquals("A", agent.get("Active"));
+        assertEquals("B", agent.get("Goomzee"));
+        assertEquals("2017-02-23 01:02:03.0", agent.get("UPLogo_image_Timestamp").toString());
+
+        var agentOpt = myBatisDao.selectParagonRawAgentById("Test");
+        assertTrue(agentOpt.isPresent());
+        agent = agentOpt.get();
+
+        // Verify
+        assertEquals("Test", agent.get("User_Code"));
+        assertEquals("A", agent.get("Active"));
+        assertEquals("B", agent.get("Goomzee"));
+        assertEquals("2017-02-23 01:02:03.0", agent.get("UPLogo_image_Timestamp").toString());
     }
 
     // ParagonRawAgent stop

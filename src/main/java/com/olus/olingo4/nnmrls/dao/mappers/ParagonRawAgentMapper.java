@@ -16,4 +16,6 @@ public interface ParagonRawAgentMapper {
     List<Map<String, Object>> selectParagonRawAgents(RowBounds rb);
 
     Map<String, Object> selectParagonRawAgentById(String id);
+
+    void insertParagonRawAgent(Map<String, Object> data);
 }

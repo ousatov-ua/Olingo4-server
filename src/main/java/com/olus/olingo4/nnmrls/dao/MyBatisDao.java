@@ -192,4 +192,16 @@ public class MyBatisDao implements IDao {
             return subscriberMapper.selectParagonRawListingRemarks(createRowBounds(offset, limit));
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Object> insertParagonRawAgent(Map<String, Object> data) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
+            subscriberMapper.insertParagonRawAgent(data);
+            session.commit();
+            return subscriberMapper.selectParagonRawAgentById(String.valueOf(data.get(ParagonRawAgentMapper.PK_KEY)));
+        }
+    }
 }

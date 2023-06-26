@@ -44,7 +44,7 @@ public class DdlUtil {
     @SuppressWarnings("unused")
     private static void createMappings() {
 
-        Set.of("ddl/ParagonRawListingRemarks.sql")
+        Set.of("ddl/ParagonRawAgent.sql")
                 .forEach(dbSqlFile -> {
                     try {
                         generateSourceCode(FileUtil.getFileContent(dbSqlFile));
@@ -64,13 +64,19 @@ public class DdlUtil {
     private static void generateSourceCode(String ddl) throws JSQLParserException, IOException {
         var statement = CCJSqlParserUtil.parse(ddl);
         var createTable = (CreateTable) statement;
+        var tableName = createTable.getTable().getName();
 
         String property = "property_";
+        var columnNames = new LinkedList<String>();
+        var myBatisColumnProperties = new LinkedList<String>();
         var number = new AtomicInteger(0);
-        try (var fileWriter = new FileWriter("java_code.java", true)) {
+        try (var fileWriter = new FileWriter("java_code.java", true);
+             var fileWriterForStatements = new FileWriter("mybatis_code.sql", true)) {
             var properties = new LinkedList<String>();
             createTable.getColumnDefinitions().forEach(columnDefinition -> {
                         String columnName = columnDefinition.getColumnName();
+                        columnNames.add(columnName);
+                        myBatisColumnProperties.add("#{" + columnName + "}");
                         var dataType = columnDefinition.getColDataType().getDataType();
                         var currentProperty = property + number;
                         properties.add(currentProperty);
@@ -88,6 +94,8 @@ public class DdlUtil {
             fileWriter.write(MessageFormat.format("entityType.setProperties(Arrays.asList({0}));\n",
                     String.join(",", properties)));
             fileWriter.write("\n");
+            fileWriterForStatements.write("insert into " + tableName + " (" + String.join(",", columnNames)
+                    + ") values (" + String.join(",", myBatisColumnProperties) + ")");
         }
     }
 }
