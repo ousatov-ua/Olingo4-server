@@ -45,3 +45,8 @@ For Ubuntu:
 ```shell
 sudo apt-get install libncurses5
 ```
+
+## Generation of code
+Please pay attention that code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo4.nmrls.util.DdlUtil`.
+
+The same for INSERT query MyBatis - use `com.olus.olingo4.nmrls.util.DdlUtil` to generate it! 
