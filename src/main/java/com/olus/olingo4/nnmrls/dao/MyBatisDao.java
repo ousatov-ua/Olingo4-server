@@ -1,6 +1,10 @@
 package com.olus.olingo4.nnmrls.dao;
 
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawAgentMapper;
+import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingFeaturesMapper;
+import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper;
+import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper;
+import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawOfficeMapper;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -43,20 +47,108 @@ public class MyBatisDao implements IDao {
     }
 
     /**
+     * We need this because we'll receive string with "''" -  Olingo requires to specify string key with quotes,
+     * e.g. 'some_id'
+     *
+     * @param id original Id received from request
+     * @return Key without quotes
+     */
+    private static String getKeyValue(String id) {
+        var key = id;
+        if (id.length() >= 3) {
+            key = id.substring(1, id.length() - 1);
+        }
+        return key;
+    }
+
+    /**
+     * Create {@link RowBounds}
+     *
+     * @param offset offset (aka skip)
+     * @param limit  limit (aka top)
+     * @return {@link RowBounds}
+     */
+    private static RowBounds createRowBounds(int offset, int limit) {
+        if (offset == -1) {
+            offset = 0;
+        }
+        if (limit == -1) {
+            limit = DEFAULT_ROW_LIMIT;
+        }
+        return new RowBounds(offset, limit);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            if (offset == -1) {
-                offset = 0;
+            return subscriberMapper.selectParagonRawAgents(createRowBounds(offset, limit));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Map<String, Object>> getAllParagonRawOffices(int offset, int limit) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
+            return subscriberMapper.selectParagonRawOffices(createRowBounds(offset, limit));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Map<String, Object>> getAllParagonRawListings(int offset, int limit) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
+            return subscriberMapper.selectParagonRawListings(createRowBounds(offset, limit));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Map<String, Object>> selectParagonRawListingById(String id) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
+            var result = subscriberMapper.selectParagonRawListingById(getKeyValue(id));
+            if (result == null) {
+                return Optional.empty();
             }
-            if (limit == -1) {
-                limit = DEFAULT_ROW_LIMIT;
+            return Optional.of(result);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Map<String, Object>> selectParagonRawListingFeaturesById(String id) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
+            var result = subscriberMapper.selectParagonRawListingFeaturesById(getKeyValue(id));
+            if (result == null) {
+                return Optional.empty();
             }
-            var rowBounds = new RowBounds(offset, limit);
-            return subscriberMapper.selectParagonRawAgents(rowBounds);
+            return Optional.of(result);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Map<String, Object>> getAllParagonRawListingFeatures(int offset, int limit) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
+            return subscriberMapper.selectParagonRawListingFeatures(createRowBounds(offset, limit));
         }
     }
 
@@ -67,15 +159,52 @@ public class MyBatisDao implements IDao {
     public Optional<Map<String, Object>> selectParagonRawAgentById(String id) {
         try (var session = sqlSessionFactory.openSession()) {
             var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            var key = id;
-            if (id.length() >= 3) {
-                key = id.substring(1, id.length() - 1);
-            }
-            var result = subscriberMapper.selectParagonRawAgentById(key);
+            var result = subscriberMapper.selectParagonRawAgentById(getKeyValue(id));
             if (result == null) {
                 return Optional.empty();
             }
             return Optional.of(result);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Map<String, Object>> selectParagonRawOfficeById(String id) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
+            var result = subscriberMapper.selectParagonRawOfficeById(getKeyValue(id));
+            if (result == null) {
+                return Optional.empty();
+            }
+            return Optional.of(result);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Map<String, Object>> selectParagonRawListingRemarksById(String id) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
+            var result = subscriberMapper.selectParagonRawListingRemarksById(getKeyValue(id));
+            if (result == null) {
+                return Optional.empty();
+            }
+            return Optional.of(result);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Map<String, Object>> getAllParagonRawListingRemarks(int offset, int limit) {
+        try (var session = sqlSessionFactory.openSession()) {
+            var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
+            return subscriberMapper.selectParagonRawListingRemarks(createRowBounds(offset, limit));
         }
     }
 }

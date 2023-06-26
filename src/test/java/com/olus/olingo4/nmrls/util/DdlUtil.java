@@ -28,14 +28,16 @@ public class DdlUtil {
      * Self descriptive
      */
     private static final Map<String, EdmPrimitiveTypeKind> DB_TYPE_TO_MAPPING_TYPE = Map.of(
+            "TINYINT", EdmPrimitiveTypeKind.Boolean,
             "BLOB", EdmPrimitiveTypeKind.String,
             "INT", EdmPrimitiveTypeKind.Int32,
             "VARCHAR", EdmPrimitiveTypeKind.String,
             "CHAR", EdmPrimitiveTypeKind.String,
-            "FLOAT", EdmPrimitiveTypeKind.Int16,
+            "FLOAT", EdmPrimitiveTypeKind.Double,
             "BOOLEAN", EdmPrimitiveTypeKind.Boolean,
             "DATE", EdmPrimitiveTypeKind.Date,
-            "DATETIME", EdmPrimitiveTypeKind.DateTimeOffset);
+            "DATETIME", EdmPrimitiveTypeKind.DateTimeOffset,
+            "JSON", EdmPrimitiveTypeKind.String);
 
     public static void main(String... args) {
         createMappings();
@@ -44,7 +46,7 @@ public class DdlUtil {
     @SuppressWarnings("unused")
     private static void createMappings() {
 
-        Set.of("ParagonRawAgent.sql")
+        Set.of("ParagonRawListingRemarks.sql")
                 .forEach(dbSqlFile -> {
                     try {
                         generateSourceCode(getFileContent(dbSqlFile));

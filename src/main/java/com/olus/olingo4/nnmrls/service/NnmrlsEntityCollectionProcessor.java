@@ -6,6 +6,7 @@ import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.OData;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.apache.olingo.server.api.ServiceMetadata;
@@ -48,7 +49,7 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
      * <a href="http://localhost:8080/<app>/<service>.svc/ParagonRawAgents">...</a>
      **/
     public void readEntityCollection(ODataRequest request, ODataResponse response, UriInfo uriInfo,
-                                     ContentType responseFormat) throws SerializerException {
+                                     ContentType responseFormat) throws SerializerException, ODataApplicationException {
 
         // We have retrieve the requested EntitySet from the uriInfo object (representation of the parsed service URI)
         var resourcePaths = uriInfo.getUriResourceParts();

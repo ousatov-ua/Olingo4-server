@@ -1,0 +1,14 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper">
+    <select id="selectParagonRawListings" resultType="map">
+        select *
+        from ParagonRawListing
+    </select>
+
+    <select id="selectParagonRawListingById" resultType="map">
+        select *
+        from ParagonRawListing where Mls_Number=#{id}
+    </select>
+</mapper>

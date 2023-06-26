@@ -36,11 +36,36 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
 
     // Entity Types Names
     public static final String ET_PRAGENT_NAME = "ParagonRawAgent";
+    public static final String ET_PROFFICE_NAME = "ParagonRawOffice";
+    public static final String ET_PRLISTING_NAME = "ParagonRawListing";
+    public static final String ET_PRLISTING_FEATURES_NAME = "ParagonRawListingFeatures";
+    public static final String ET_PRLISTING_REMARKS_NAME = "ParagonRawListingRemarks";
     public static final FullQualifiedName ET_PRAGENT_FQN = new FullQualifiedName(NAMESPACE, ET_PRAGENT_NAME);
+    public static final FullQualifiedName ET_PROFFICE_FQN = new FullQualifiedName(NAMESPACE, ET_PROFFICE_NAME);
+    public static final FullQualifiedName ET_PRLISTING_FQN = new FullQualifiedName(NAMESPACE, ET_PRLISTING_NAME);
+    public static final FullQualifiedName ET_PRLISTING_FEATURES_FQN = new FullQualifiedName(NAMESPACE, ET_PRLISTING_FEATURES_NAME);
+    public static final FullQualifiedName ET_PRLISTING_REMARKS_FQN = new FullQualifiedName(NAMESPACE, ET_PRLISTING_REMARKS_NAME);
 
     // Entity Set Names
     public static final String ES_PRAGENT_NAME = "ParagonRawAgents";
+    public static final String ES_PROFFICE_NAME = "ParagonRawOffices";
+    public static final String ES_PRLISTING_NAME = "ParagonRawListings";
+    public static final String ES_PRLISTING_FEATURES_NAME = "ParagonRawListingFeatures";
+    public static final String ES_PRLISTING_REMARKS_NAME = "ParagonRawListingRemarks";
 
+    /**
+     * Create {@link CsdlEntityType}
+     *
+     * @param name name
+     * @param type type
+     * @return {@link CsdlEntityType}
+     */
+    private static CsdlEntitySet createCsdlEntitySet(String name, FullQualifiedName type) {
+        CsdlEntitySet entitySet = new CsdlEntitySet();
+        entitySet.setName(name);
+        entitySet.setType(type);
+        return entitySet;
+    }
 
     @Override
     public List<CsdlSchema> getSchemas() {
@@ -52,6 +77,10 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         // add EntityTypes
         var entityTypes = new ArrayList<CsdlEntityType>();
         entityTypes.add(getEntityType(ET_PRAGENT_FQN));
+        entityTypes.add(getEntityType(ET_PROFFICE_FQN));
+        entityTypes.add(getEntityType(ET_PRLISTING_FQN));
+        entityTypes.add(getEntityType(ET_PRLISTING_FEATURES_FQN));
+        entityTypes.add(getEntityType(ET_PRLISTING_REMARKS_FQN));
         schema.setEntityTypes(entityTypes);
 
         // add EntityContainer
@@ -71,6 +100,18 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
             if (entityTypeName.equals(ET_PRAGENT_FQN)) {
                 return ParagonRawAgentCsdlEntityTypeProvider.createType();
             }
+            if (entityTypeName.equals(ET_PROFFICE_FQN)) {
+                return ParagonRawOfficeCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PRLISTING_FQN)) {
+                return ParagonRawListingCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PRLISTING_FEATURES_FQN)) {
+                return ParagonRawListingFeaturesCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PRLISTING_REMARKS_FQN)) {
+                return ParagonRawListingRemarksCsdlEntityTypeProvider.createType();
+            }
             return null;
         });
     }
@@ -78,11 +119,17 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntitySet getEntitySet(FullQualifiedName entityContainer, String entitySetName) {
         if (entityContainer.equals(CONTAINER)) {
-            if (entitySetName.equals(ES_PRAGENT_NAME)) {
-                CsdlEntitySet entitySet = new CsdlEntitySet();
-                entitySet.setName(ES_PRAGENT_NAME);
-                entitySet.setType(ET_PRAGENT_FQN);
-                return entitySet;
+            switch (entitySetName) {
+                case ES_PRAGENT_NAME:
+                    return createCsdlEntitySet(ES_PRAGENT_NAME, ET_PRAGENT_FQN);
+                case ES_PROFFICE_NAME:
+                    return createCsdlEntitySet(ES_PROFFICE_NAME, ET_PROFFICE_FQN);
+                case ES_PRLISTING_NAME:
+                    return createCsdlEntitySet(ES_PRLISTING_NAME, ET_PRLISTING_FQN);
+                case ES_PRLISTING_FEATURES_NAME:
+                    return createCsdlEntitySet(ES_PRLISTING_FEATURES_NAME, ET_PRLISTING_FEATURES_FQN);
+                case ES_PRLISTING_REMARKS_NAME:
+                    return createCsdlEntitySet(ES_PRLISTING_REMARKS_NAME, ET_PRLISTING_REMARKS_FQN);
             }
         }
         return null;
@@ -94,6 +141,10 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         // Create EntitySets
         var entitySets = new ArrayList<CsdlEntitySet>();
         entitySets.add(getEntitySet(CONTAINER, ES_PRAGENT_NAME));
+        entitySets.add(getEntitySet(CONTAINER, ES_PROFFICE_NAME));
+        entitySets.add(getEntitySet(CONTAINER, ES_PRLISTING_NAME));
+        entitySets.add(getEntitySet(CONTAINER, ES_PRLISTING_FEATURES_NAME));
+        entitySets.add(getEntitySet(CONTAINER, ES_PRLISTING_REMARKS_NAME));
 
         // Create EntityContainer
         var entityContainer = new CsdlEntityContainer();

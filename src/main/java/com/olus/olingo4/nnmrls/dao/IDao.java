@@ -14,6 +14,8 @@ public interface IDao {
     /**
      * Fetch all ParagonRawAgents
      *
+     * @param offset offset (aka skip)
+     * @param limit  limit (aka top)
      * @return list of agents
      */
     List<Map<String, Object>> getAllParagonRawAgents(int offset, int limit);
@@ -25,4 +27,73 @@ public interface IDao {
      * @return map
      */
     Optional<Map<String, Object>> selectParagonRawAgentById(String id);
+
+    /**
+     * Fetch all ParagonRawOffices
+     *
+     * @param offset offset (aka skip)
+     * @param limit  limit (aka top)
+     * @return list of offices
+     */
+    List<Map<String, Object>> getAllParagonRawOffices(int offset, int limit);
+
+    /**
+     * Fetch specific ParagonRawOffice
+     *
+     * @param id id of entity
+     * @return map
+     */
+    Optional<Map<String, Object>> selectParagonRawOfficeById(String id);
+
+    /**
+     * Fetch all ParagonRawListings
+     *
+     * @param offset offset (aka skip)
+     * @param limit  limit (aka top)
+     * @return list of listings
+     */
+    List<Map<String, Object>> getAllParagonRawListings(int offset, int limit);
+
+    /**
+     * Fetch specific ParagonRawListing
+     *
+     * @param id id of entity
+     * @return map
+     */
+    Optional<Map<String, Object>> selectParagonRawListingById(String id);
+
+    /**
+     * Fetch specific ParagonRawListingFeatures
+     *
+     * @param id id of entity
+     * @return map
+     */
+    Optional<Map<String, Object>> selectParagonRawListingFeaturesById(String id);
+
+    /**
+     * Fetch all ParagonRawListingFeatures
+     *
+     * @param offset offset (aka skip)
+     * @param limit  limit (aka top)
+     * @return list of features
+     */
+    List<Map<String, Object>> getAllParagonRawListingFeatures(int offset, int limit);
+
+    /**
+     * Fetch specific ParagonRawListingRemarks
+     *
+     * @param id id of entity
+     * @return map
+     */
+    Optional<Map<String, Object>> selectParagonRawListingRemarksById(String id);
+
+
+    /**
+     * Fetch all ParagonRawListingRemarks
+     *
+     * @param offset offset (aka skip)
+     * @param limit  limit (aka top)
+     * @return list of remarks
+     */
+    List<Map<String, Object>> getAllParagonRawListingRemarks(int offset, int limit);
 }
