@@ -94,19 +94,16 @@ public class Olingo4Storage {
                 return Olingo4Converter.convertListOfMaps(ES_PRLISTING_NAME,
                         ParagonRawListingMapper.PK_KEY,
                         mybatisDao.selectAllParagonRawListings(offset, limit));
-            } else {
-                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
             }
+            throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
         } else if (ES_PRLISTING_FEATURES_NAME.equals(edmEntitySet.getName())) {
             if (TURN_ON_SELECT_LISTING_FEATURES) {
                 validateLimit(limit);
                 return Olingo4Converter.convertListOfMaps(ES_PRLISTING_FEATURES_NAME,
                         ParagonRawListingFeaturesMapper.PK_KEY,
                         mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
-            } else {
-
-                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
             }
+            throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
         } else if (ES_PRLISTING_REMARKS_NAME.equals(edmEntitySet.getName())) {
             validateLimit(limit);
             return Olingo4Converter.convertListOfMaps(ES_PRLISTING_REMARKS_NAME,
