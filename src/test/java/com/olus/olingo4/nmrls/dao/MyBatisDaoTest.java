@@ -36,7 +36,6 @@ class MyBatisDaoTest extends FuncDbTest {
     }
 
     // ParagonRawAgent start
-
     @Test
     void testSelectParagonRawAgentDataById() {
 
@@ -135,7 +134,6 @@ class MyBatisDaoTest extends FuncDbTest {
     // ParagonRawAgent stop
 
     // ParagonRawOffice start
-
     @Test
     void testSelectParagonRawOfficeDataById() {
 
@@ -208,7 +206,6 @@ class MyBatisDaoTest extends FuncDbTest {
 
 
     // ParagonRawListing start
-
     @Test
     void testSelectParagonRawListingDataById() {
 
@@ -279,7 +276,6 @@ class MyBatisDaoTest extends FuncDbTest {
     // ParagonRawListing stop
 
     // ParagonRawListingRemarks start
-
     @Test
     void testSelectParagonRawListingRemarksDataById() {
 
@@ -334,4 +330,5 @@ class MyBatisDaoTest extends FuncDbTest {
         assertEquals("public remarks 2", listing1.get("Extended_Public_Remarks"));
         assertEquals(2L, listing1.get("SystemId"));
     }
+    // ParagonRawListingRemarks end
 }
