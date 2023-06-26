@@ -95,7 +95,7 @@ public class Olingo4Storage {
                         ParagonRawListingMapper.PK_KEY,
                         mybatisDao.selectAllParagonRawListings(offset, limit));
             } else {
-                throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
             }
         } else if (ES_PRLISTING_FEATURES_NAME.equals(edmEntitySet.getName())) {
             if (TURN_ON_SELECT_LISTING_FEATURES) {
@@ -105,7 +105,7 @@ public class Olingo4Storage {
                         mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
             } else {
 
-                throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+                throw new ODataApplicationException("Not supported. Please select by key.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
             }
         } else if (ES_PRLISTING_REMARKS_NAME.equals(edmEntitySet.getName())) {
             validateLimit(limit);
