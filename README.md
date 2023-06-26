@@ -38,7 +38,7 @@ Also, in `server.xml` connector is configured to have next attributes:
 
 ## Functional tests
 
-Currently, we are using embedded DB. It needs ncurses lib installed.
+Currently, we are using embedded DB. It needs ncurses lib installed (maybe)
 
 For Ubuntu:
 
