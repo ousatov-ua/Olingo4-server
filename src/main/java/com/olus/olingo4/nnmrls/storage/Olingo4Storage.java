@@ -32,6 +32,9 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PROF
  * @author Oleksii Usatov
  */
 public class Olingo4Storage {
+    private static final boolean TURN_ON_SELECT_LISTINGS = false;
+    private static final boolean TURN_ON_SELECT_LISTING_FEATURES = false;
+
     private static final int LIMIT_OF_TOP_FOR_HEAVY_TABLES = 2;
 
     private final MyBatisDao mybatisDao;
@@ -87,14 +90,23 @@ public class Olingo4Storage {
                     ParagonRawOfficeMapper.PK_KEY,
                     mybatisDao.selectAllParagonRawOffices(offset, limit));
         } else if (ES_PRLISTING_NAME.equals(edmEntitySet.getName())) {
-            return Olingo4Converter.convertListOfMaps(ES_PRLISTING_NAME,
-                    ParagonRawListingMapper.PK_KEY,
-                    mybatisDao.selectAllParagonRawListings(offset, limit));
+            if (TURN_ON_SELECT_LISTINGS) {
+                return Olingo4Converter.convertListOfMaps(ES_PRLISTING_NAME,
+                        ParagonRawListingMapper.PK_KEY,
+                        mybatisDao.selectAllParagonRawListings(offset, limit));
+            } else {
+                throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+            }
         } else if (ES_PRLISTING_FEATURES_NAME.equals(edmEntitySet.getName())) {
-            validateLimit(limit);
-            return Olingo4Converter.convertListOfMaps(ES_PRLISTING_FEATURES_NAME,
-                    ParagonRawListingFeaturesMapper.PK_KEY,
-                    mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
+            if (TURN_ON_SELECT_LISTING_FEATURES) {
+                validateLimit(limit);
+                return Olingo4Converter.convertListOfMaps(ES_PRLISTING_FEATURES_NAME,
+                        ParagonRawListingFeaturesMapper.PK_KEY,
+                        mybatisDao.selectAllParagonRawListingFeatures(offset, limit));
+            } else {
+
+                throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+            }
         } else if (ES_PRLISTING_REMARKS_NAME.equals(edmEntitySet.getName())) {
             validateLimit(limit);
             return Olingo4Converter.convertListOfMaps(ES_PRLISTING_REMARKS_NAME,
