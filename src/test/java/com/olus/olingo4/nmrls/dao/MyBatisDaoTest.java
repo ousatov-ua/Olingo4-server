@@ -43,7 +43,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawAgent.sql");
 
         // Execute
-        var resultOpt = myBatisDao.selectParagonRawAgentById("code1");
+        var resultOpt = myBatisDao.selectEntity("ParagonRawAgent", "User_Code", "code1");
 
         // Verify
         assertTrue(resultOpt.isPresent());
@@ -62,7 +62,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawAgent.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawAgents(-1, -1);
+        var result = myBatisDao.selectAllEntities("ParagonRawAgent", -1, -1);
 
         // Verify
         assertEquals(2, result.size());
@@ -88,7 +88,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawAgent.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawAgents(1, 1);
+        var result = myBatisDao.selectAllEntities("ParagonRawAgent", 1, 1);
 
         // Verify
         assertEquals(1, result.size());
@@ -101,18 +101,18 @@ class MyBatisDaoTest extends FuncDbTest {
     }
 
     @Test
-    void testInsertParagonRawAgent(){
+    void testInsertParagonRawAgent() {
 
         // Setup
         var request = Map.of(
                 "User_Code", "Test",
                 "Active", "A",
                 "Goomzee", "B",
-                "UPLogo_image_Timestamp", (Object)Timestamp.valueOf("2017-02-23 01:02:03")
+                "UPLogo_image_Timestamp", (Object) Timestamp.valueOf("2017-02-23 01:02:03")
         );
 
         // Execute
-        var agent = myBatisDao.insertParagonRawAgent(request);
+        var agent = myBatisDao.insertEntity("ParagonRawAgent", "User_Code", request);
 
         // Verify
         assertEquals("Test", agent.get("User_Code"));
@@ -120,7 +120,7 @@ class MyBatisDaoTest extends FuncDbTest {
         assertEquals("B", agent.get("Goomzee"));
         assertEquals("2017-02-23 01:02:03.0", agent.get("UPLogo_image_Timestamp").toString());
 
-        var agentOpt = myBatisDao.selectParagonRawAgentById("Test");
+        var agentOpt = myBatisDao.selectEntity("ParagonRawAgent", "User_Code", "Test");
         assertTrue(agentOpt.isPresent());
         agent = agentOpt.get();
 
@@ -141,7 +141,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawOffice.sql");
 
         // Execute
-        var resultOpt = myBatisDao.selectParagonRawOfficeById("code1");
+        var resultOpt = myBatisDao.selectEntity("ParagonRawOffice", "Office_Abbreviation", "code1");
 
         // Verify
         assertTrue(resultOpt.isPresent());
@@ -161,7 +161,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawOffice.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawOffices(-1, -1);
+        var result = myBatisDao.selectAllEntities("ParagonRawOffice", -1, -1);
 
         // Verify
         assertEquals(2, result.size());
@@ -189,7 +189,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawOffice.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawOffices(1, 1);
+        var result = myBatisDao.selectAllEntities("ParagonRawOffice", 1, 1);
 
         // Verify
         assertEquals(1, result.size());
@@ -210,20 +210,21 @@ class MyBatisDaoTest extends FuncDbTest {
     void testSelectParagonRawListingDataById() {
 
         // Setup
-        runCommandForContent("sql/insertParagonRawOffice.sql");
+        runCommandForContent("sql/insertParagonRawListing.sql");
 
         // Execute
-        var resultOpt = myBatisDao.selectParagonRawOfficeById("code1");
+        var resultOpt = myBatisDao.selectEntity("ParagonRawListing", "Mls_Number", "code1");
 
         // Verify
         assertTrue(resultOpt.isPresent());
         var result = resultOpt.get();
-        assertEquals("code1", result.get("Office_Abbreviation"));
+        // Verify
+        assertEquals("code1", result.get("Mls_Number"));
+        assertEquals(1, result.get("_1_Bedroom___Number__Baths"));
+        assertEquals(1.25f, result.get("Acres_of_Water_Rights"));
 
-        // TODO Active... = {={={=true}}}
-        // assertEquals(true, result.get("Active"));
-        assertEquals("2003-05-02 01:02:03.0", result.get("Date_Added").toString());
-        assertEquals(3, result.get("Office_Identifier"));
+        assertEquals("2003-05-03", result.get("Date_Available").toString());
+        assertEquals("2004-06-07 02:03:04.0", result.get("Doc_Timestamp").toString());
     }
 
     @Test
@@ -233,7 +234,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawListing.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawListings(-1, -1);
+        var result = myBatisDao.selectAllEntities("ParagonRawListing", -1, -1);
 
         // Verify
         assertEquals(2, result.size());
@@ -261,7 +262,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawListing.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawListings(1, 1);
+        var result = myBatisDao.selectAllEntities("ParagonRawListing", 1, 1);
 
         // Verify
         var listing1 = result.get(0);
@@ -283,7 +284,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawListingRemarks.sql");
 
         // Execute
-        var resultOpt = myBatisDao.selectParagonRawListingRemarksById("code1");
+        var resultOpt = myBatisDao.selectEntity("ParagonRawListingRemarks", "Mls_Number", "code1");
 
         // Verify
         assertTrue(resultOpt.isPresent());
@@ -300,7 +301,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawListingRemarks.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawListingRemarks(-1, -1);
+        var result = myBatisDao.selectAllEntities("ParagonRawListingRemarks", -1, -1);
 
         // Verify
         assertEquals(2, result.size());
@@ -322,7 +323,7 @@ class MyBatisDaoTest extends FuncDbTest {
         runCommandForContent("sql/insertParagonRawListingRemarks.sql");
 
         // Execute
-        var result = myBatisDao.selectAllParagonRawListingRemarks(1, 1);
+        var result = myBatisDao.selectAllEntities("ParagonRawListingRemarks", 1, 1);
 
         // Verify
         var listing1 = result.get(0);

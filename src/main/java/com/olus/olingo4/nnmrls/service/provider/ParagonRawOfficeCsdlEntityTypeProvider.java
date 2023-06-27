@@ -1,6 +1,5 @@
 package com.olus.olingo4.nnmrls.service.provider;
 
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawOfficeMapper;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -69,7 +68,7 @@ public class ParagonRawOfficeCsdlEntityTypeProvider {
 
         // create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
-        propertyRef.setName(ParagonRawOfficeMapper.PK_KEY);
+        propertyRef.setName("Office_Abbreviation");
 
         // configure EntityType
         entityType.setName(ET_PROFFICE_NAME);

@@ -22,11 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
 
-    /**
-     * Cache for CsdlEntityType
-     */
-    private static final Map<FullQualifiedName, CsdlEntityType> CSDL_ENTITY_TYPE_CACHE = new ConcurrentHashMap<>();
-
     // Service Namespace
     public static final String NAMESPACE = "OData.Nnmrls";
 
@@ -46,12 +41,58 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
     public static final FullQualifiedName ET_PRLISTING_FEATURES_FQN = new FullQualifiedName(NAMESPACE, ET_PRLISTING_FEATURES_NAME);
     public static final FullQualifiedName ET_PRLISTING_REMARKS_FQN = new FullQualifiedName(NAMESPACE, ET_PRLISTING_REMARKS_NAME);
 
+    /**
+     * All FullQualifiedNames
+     */
+    public static final List<FullQualifiedName> ALL_FQN = List.of(
+            ET_PRAGENT_FQN,
+            ET_PROFFICE_FQN,
+            ET_PRLISTING_FQN,
+            ET_PRLISTING_FEATURES_FQN,
+            ET_PRLISTING_REMARKS_FQN
+    );
     // Entity Set Names
     public static final String ES_PRAGENT_NAME = "ParagonRawAgents";
     public static final String ES_PROFFICE_NAME = "ParagonRawOffices";
     public static final String ES_PRLISTING_NAME = "ParagonRawListings";
     public static final String ES_PRLISTING_FEATURES_NAME = "ParagonRawListingFeatures";
     public static final String ES_PRLISTING_REMARKS_NAME = "ParagonRawListingRemarks";
+
+    /**
+     * Mapping ES to EF
+     */
+    public static final Map<String, FullQualifiedName> ES_TO_EF = Map.of(
+            ES_PRAGENT_NAME, ET_PRAGENT_FQN,
+            ES_PROFFICE_NAME, ET_PROFFICE_FQN,
+            ES_PRLISTING_NAME, ET_PRLISTING_FQN,
+            ES_PRLISTING_FEATURES_NAME, ET_PRLISTING_FEATURES_FQN,
+            ES_PRLISTING_REMARKS_NAME, ET_PRLISTING_REMARKS_FQN
+    );
+
+    /**
+     * Mapping ES to ET
+     */
+    public static final Map<String, String> ES_TO_ET = Map.of(
+            ES_PRAGENT_NAME, ET_PRAGENT_NAME,
+            ES_PROFFICE_NAME, ET_PROFFICE_NAME,
+            ES_PRLISTING_NAME, ET_PRLISTING_NAME,
+            ES_PRLISTING_FEATURES_NAME, ET_PRLISTING_FEATURES_NAME,
+            ES_PRLISTING_REMARKS_NAME, ET_PRLISTING_REMARKS_NAME
+    );
+    /**
+     * Mapping ET to ES
+     */
+    public static final Map<String, String> ET_TO_ES = Map.of(
+            ET_PRAGENT_NAME, ES_PRAGENT_NAME,
+            ET_PROFFICE_NAME, ES_PROFFICE_NAME,
+            ET_PRLISTING_NAME, ES_PRLISTING_NAME,
+            ET_PRLISTING_FEATURES_NAME, ES_PRLISTING_FEATURES_NAME,
+            ET_PRLISTING_REMARKS_NAME, ES_PRLISTING_REMARKS_NAME
+    );
+    /**
+     * Cache for CsdlEntityType
+     */
+    private static final Map<FullQualifiedName, CsdlEntityType> CSDL_ENTITY_TYPE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Create {@link CsdlEntityType}
@@ -65,6 +106,33 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
         entitySet.setName(name);
         entitySet.setType(type);
         return entitySet;
+    }
+
+    /**
+     * Create Csdl entity type
+     *
+     * @param entityTypeName name
+     * @return {@link CsdlEntityType}
+     */
+    public static CsdlEntityType getCsdlEntityType(FullQualifiedName entityTypeName) {
+        return CSDL_ENTITY_TYPE_CACHE.computeIfAbsent(entityTypeName, (key) -> {
+            if (entityTypeName.equals(ET_PRAGENT_FQN)) {
+                return ParagonRawAgentCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PROFFICE_FQN)) {
+                return ParagonRawOfficeCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PRLISTING_FQN)) {
+                return ParagonRawListingCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PRLISTING_FEATURES_FQN)) {
+                return ParagonRawListingFeaturesCsdlEntityTypeProvider.createType();
+            }
+            if (entityTypeName.equals(ET_PRLISTING_REMARKS_FQN)) {
+                return ParagonRawListingRemarksCsdlEntityTypeProvider.createType();
+            }
+            return null;
+        });
     }
 
     @Override
@@ -96,24 +164,7 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) {
 
         // This method is called for one of the EntityTypes that are configured in the Schema
-        return CSDL_ENTITY_TYPE_CACHE.computeIfAbsent(entityTypeName, (key) -> {
-            if (entityTypeName.equals(ET_PRAGENT_FQN)) {
-                return ParagonRawAgentCsdlEntityTypeProvider.createType();
-            }
-            if (entityTypeName.equals(ET_PROFFICE_FQN)) {
-                return ParagonRawOfficeCsdlEntityTypeProvider.createType();
-            }
-            if (entityTypeName.equals(ET_PRLISTING_FQN)) {
-                return ParagonRawListingCsdlEntityTypeProvider.createType();
-            }
-            if (entityTypeName.equals(ET_PRLISTING_FEATURES_FQN)) {
-                return ParagonRawListingFeaturesCsdlEntityTypeProvider.createType();
-            }
-            if (entityTypeName.equals(ET_PRLISTING_REMARKS_FQN)) {
-                return ParagonRawListingRemarksCsdlEntityTypeProvider.createType();
-            }
-            return null;
-        });
+        return getCsdlEntityType(entityTypeName);
     }
 
     @Override

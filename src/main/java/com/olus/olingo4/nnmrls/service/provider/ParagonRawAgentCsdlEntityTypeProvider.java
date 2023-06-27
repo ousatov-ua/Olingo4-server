@@ -1,6 +1,5 @@
 package com.olus.olingo4.nnmrls.service.provider;
 
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawAgentMapper;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -100,7 +99,7 @@ public class ParagonRawAgentCsdlEntityTypeProvider {
 
         // create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
-        propertyRef.setName(ParagonRawAgentMapper.PK_KEY);
+        propertyRef.setName("User_Code");
 
         // configure EntityType
         entityType.setName(ET_PRAGENT_NAME);

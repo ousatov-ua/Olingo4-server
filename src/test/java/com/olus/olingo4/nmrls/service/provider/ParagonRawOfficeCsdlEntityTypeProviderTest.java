@@ -22,9 +22,9 @@ public class ParagonRawOfficeCsdlEntityTypeProviderTest {
 
         // Verify
         assertEquals(ET_PROFFICE_NAME, type.getName());
-        assertEquals("Edm.String", type.getProperty(ParagonRawOfficeMapper.PK_KEY).getType());
+        assertEquals("Edm.String", type.getProperty("Office_Abbreviation").getType());
         assertEquals(42, type.getProperties().size());
         assertEquals(1, type.getKey().size());
-        assertEquals(ParagonRawOfficeMapper.PK_KEY, type.getKey().get(0).getName());
+        assertEquals("Office_Abbreviation", type.getKey().get(0).getName());
     }
 }

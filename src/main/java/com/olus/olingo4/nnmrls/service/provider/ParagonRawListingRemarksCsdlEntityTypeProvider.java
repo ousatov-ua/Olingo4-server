@@ -1,6 +1,5 @@
 package com.olus.olingo4.nnmrls.service.provider;
 
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -31,7 +30,7 @@ public class ParagonRawListingRemarksCsdlEntityTypeProvider {
 
         // create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
-        propertyRef.setName(ParagonRawListingRemarksMapper.PK_KEY);
+        propertyRef.setName("Mls_Number");
 
         // configure EntityType
         entityType.setName(ET_PRLISTING_REMARKS_NAME);

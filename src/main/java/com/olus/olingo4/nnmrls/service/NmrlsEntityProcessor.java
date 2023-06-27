@@ -26,9 +26,9 @@ import java.util.Locale;
  * @author Oleksii Usatov
  */
 public class NmrlsEntityProcessor implements EntityProcessor {
+    private final Olingo4Storage storage;
     private OData odata;
     private ServiceMetadata serviceMetadata;
-    private final Olingo4Storage storage;
 
     public NmrlsEntityProcessor(Olingo4Storage storage) {
         this.storage = storage;
@@ -107,8 +107,32 @@ public class NmrlsEntityProcessor implements EntityProcessor {
     }
 
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat, ContentType responseFormat)
-            throws ODataApplicationException, DeserializerException, SerializerException {
-        throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ROOT);
+            throws DeserializerException, ODataApplicationException {
+
+        // Retrieve the entity set which belongs to the requested entity
+        var resourcePaths = uriInfo.getUriResourceParts();
+
+        // Note: only in our application we can assume that the first segment is the EntitySet
+        var uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
+        var edmEntitySet = uriResourceEntitySet.getEntitySet();
+        var edmEntityType = edmEntitySet.getEntityType();
+
+        // Update the data in backend
+        // Retrieve the payload from the PUT request for the entity to be updated
+        var requestInputStream = request.getBody();
+        var deserializer = this.odata.createDeserializer(requestFormat);
+        var result = deserializer.entity(requestInputStream, edmEntityType);
+        var requestEntity = result.getEntity();
+
+        // Do the modification in backend
+        var keyPredicates = uriResourceEntitySet.getKeyPredicates();
+
+        // Note that this updateEntity() method is invoked for both PUT or PATCH operations
+        var httpMethod = request.getMethod();
+        storage.updateEntityData(edmEntitySet, keyPredicates, requestEntity, httpMethod);
+
+        // Configure the response object
+        response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
     }
 
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo) throws ODataApplicationException {

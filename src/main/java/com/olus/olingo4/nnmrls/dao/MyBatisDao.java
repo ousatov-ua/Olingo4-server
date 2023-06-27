@@ -1,19 +1,37 @@
 package com.olus.olingo4.nnmrls.dao;
 
+import com.olus.olingo4.nnmrls.dao.mappers.Mapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawAgentMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingFeaturesMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawOfficeMapper;
+import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.mybatis.dynamic.sql.SqlBuilder;
+import org.mybatis.dynamic.sql.SqlColumn;
+import org.mybatis.dynamic.sql.SqlTable;
+import org.mybatis.dynamic.sql.render.RenderingStrategies;
+import org.mybatis.dynamic.sql.update.UpdateDSL;
+import org.mybatis.dynamic.sql.update.UpdateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRAGENT_NAME;
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRLISTING_FEATURES_NAME;
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRLISTING_NAME;
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRLISTING_REMARKS_NAME;
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PROFFICE_NAME;
 
 /**
  * Implementation for {@link IDao}
@@ -26,6 +44,7 @@ public class MyBatisDao implements IDao {
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(MyBatisDao.class);
     private final SqlSessionFactory sqlSessionFactory;
+    private final Map<String, Collection<SqlColumn<Object>>> tableToAllColumns = new HashMap<>();
 
     /**
      * Constructor
@@ -33,16 +52,18 @@ public class MyBatisDao implements IDao {
     public MyBatisDao() {
         sqlSessionFactory =
                 new SqlSessionFactoryBuilder().build(getResource());
-    }
+        NnmrlsEdmProvider.ALL_FQN.forEach(fqn -> {
+            var table = SqlTable.of(fqn.getName());
+            var columns = NnmrlsEdmProvider.getCsdlEntityType(fqn).getProperties()
+                    .stream()
+                    .map(prop -> {
+                        var name = prop.getName().contains(".") ? "`" + prop.getName() + "`" : prop.getName();
+                        return SqlColumn.of(name, table);
+                    })
+                    .collect(Collectors.toList());
+            tableToAllColumns.put(fqn.getName(), columns);
+        });
 
-    /**
-     * Get mybatis resource, created for test purpose to override it
-     *
-     * @return {@link InputStream}
-     */
-    protected InputStream getResource() {
-        String resource = "mybatis/mybatis-config.xml";
-        return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     }
 
     private static int offset(int offset) {
@@ -56,145 +77,113 @@ public class MyBatisDao implements IDao {
         return limit;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Map<String, Object>> selectAllParagonRawAgents(int offset, int limit) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            return subscriberMapper.selectParagonRawAgents(offset(offset), limit(limit));
+    private static Mapper getMapper(String tableName, SqlSession session) {
+        switch (tableName) {
+            case ET_PRAGENT_NAME:
+                return session.getMapper(ParagonRawAgentMapper.class);
+            case ET_PROFFICE_NAME:
+                return session.getMapper(ParagonRawOfficeMapper.class);
+            case ET_PRLISTING_NAME:
+                return session.getMapper(ParagonRawListingMapper.class);
+            case ET_PRLISTING_FEATURES_NAME:
+                return session.getMapper(ParagonRawListingFeaturesMapper.class);
+            case ET_PRLISTING_REMARKS_NAME:
+                return session.getMapper(ParagonRawListingRemarksMapper.class);
         }
+        return null;
     }
 
     /**
-     * {@inheritDoc}
+     * Get mybatis resource, created for test purpose to override it
+     *
+     * @return {@link InputStream}
      */
-    @Override
-    public List<Map<String, Object>> selectAllParagonRawOffices(int offset, int limit) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
-            return subscriberMapper.selectParagonRawOffices(offset(offset), limit(limit));
-        }
+    protected InputStream getResource() {
+        String resource = "mybatis/mybatis-config.xml";
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Map<String, Object>> selectAllParagonRawListings(int offset, int limit) {
+    public List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit) {
+        final var table = SqlTable.of(tableName);
         try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
-            return subscriberMapper.selectParagonRawListings(offset(offset), limit(limit));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<Map<String, Object>> selectParagonRawListingById(String id) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawListingMapper.class);
-            var result = subscriberMapper.selectParagonRawListingById(id);
-            if (result == null) {
-                return Optional.empty();
+            var mapper = getMapper(tableName, session);
+            if (mapper != null) {
+                var columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
+                var select = SqlBuilder.select(columns)
+                        .from(table)
+                        .limit(limit(limit))
+                        .offset(offset(offset))
+                        .build()
+                        .render(RenderingStrategies.MYBATIS3);
+                return mapper.selectAllEntities(select);
             }
-            return Optional.of(result);
         }
+        return List.of();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Optional<Map<String, Object>> selectParagonRawListingFeaturesById(String id) {
+    public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key) {
+        final var table = SqlTable.of(tableName);
         try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
-            var result = subscriberMapper.selectParagonRawListingFeaturesById(id);
-            if (result == null) {
-                return Optional.empty();
+            var mapper = getMapper(tableName, session);
+            if (mapper != null) {
+                var columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
+                var select = SqlBuilder.select(columns)
+                        .from(table)
+                        .where(SqlColumn.of(keyName, table), SqlBuilder.isEqualTo(key))
+                        .build()
+                        .render(RenderingStrategies.MYBATIS3);
+                return Optional.of(mapper.selectEntity(select));
             }
-            return Optional.of(result);
         }
+        return Optional.empty();
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    public List<Map<String, Object>> selectAllParagonRawListingFeatures(int offset, int limit) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawListingFeaturesMapper.class);
-            return subscriberMapper.selectParagonRawListingFeatures(offset(offset), limit(limit));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<Map<String, Object>> selectParagonRawAgentById(String id) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            var result = subscriberMapper.selectParagonRawAgentById(id);
-            if (result == null) {
-                return Optional.empty();
+    public Map<String, Object> insertEntity(String tableName, String keyName, Map<String, Object> data) {
+        final var table = SqlTable.of(tableName);
+        try (var session = sqlSessionFactory.openSession(true)) {
+            var mapper = getMapper(tableName, session);
+            if (mapper != null) {
+                var sqlBuilder = SqlBuilder.insert(data);
+                var insert = sqlBuilder.into(table);
+                for (var param : data.entrySet()) {
+                    insert = insert.map(SqlColumn.of(param.getKey(), table)).toProperty(param.getKey());
+                }
+                mapper.insertEntity(insert.build().render(RenderingStrategies.MYBATIS3));
+                return selectEntity(tableName, keyName, (String) data.get(keyName)).get();
             }
-            return Optional.of(result);
         }
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Map<String, Object>> selectParagonRawOfficeById(String id) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawOfficeMapper.class);
-            var result = subscriberMapper.selectParagonRawOfficeById(id);
-            if (result == null) {
-                return Optional.empty();
+    public int updateEntity(String tableName, Map<String, Object> keys, Map<String, Object> data) {
+        final var table = SqlTable.of(tableName);
+        try (var session = sqlSessionFactory.openSession(true)) {
+            var sqlBuilder = SqlBuilder.update(table);
+            for (var param : data.entrySet()) {
+                sqlBuilder = sqlBuilder.set(SqlColumn.of(param.getKey(), table)).equalTo(param.getValue());
             }
-            return Optional.of(result);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<Map<String, Object>> selectParagonRawListingRemarksById(String id) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
-            var result = subscriberMapper.selectParagonRawListingRemarksById(id);
-            if (result == null) {
-                return Optional.empty();
+            UpdateDSL<UpdateModel>.UpdateWhereBuilder updateBuilder = null;
+            for (var key : keys.entrySet()) {
+                updateBuilder = sqlBuilder.where(SqlColumn.of(key.getKey(), table), SqlBuilder.isEqualTo(key.getValue()));
             }
-            return Optional.of(result);
+            if (updateBuilder != null) {
+                var finalUpdate = updateBuilder.build()
+                        .render(RenderingStrategies.MYBATIS3);
+                var mapper = getMapper(tableName, session);
+                if (mapper != null) {
+                    return mapper.updateEntity(finalUpdate);
+                }
+            }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Map<String, Object>> selectAllParagonRawListingRemarks(int offset, int limit) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawListingRemarksMapper.class);
-            return subscriberMapper.selectParagonRawListingRemarks(offset(offset), limit(limit));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Map<String, Object> insertParagonRawAgent(Map<String, Object> data) {
-        try (var session = sqlSessionFactory.openSession()) {
-            var subscriberMapper = session.getMapper(ParagonRawAgentMapper.class);
-            subscriberMapper.insertParagonRawAgent(data);
-            session.commit();
-            return subscriberMapper.selectParagonRawAgentById(String.valueOf(data.get(ParagonRawAgentMapper.PK_KEY)));
-        }
+        return 0;
     }
 }

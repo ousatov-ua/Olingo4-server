@@ -22,9 +22,9 @@ class ParagonRawAgentCsdlEntityTypeProviderTest {
 
         // Verify
         assertEquals(ET_PRAGENT_NAME, type.getName());
-        assertEquals("Edm.String", type.getProperty(ParagonRawAgentMapper.PK_KEY).getType());
+        assertEquals("Edm.String", type.getProperty("User_Code").getType());
         assertEquals(66, type.getProperties().size());
         assertEquals(1, type.getKey().size());
-        assertEquals(ParagonRawAgentMapper.PK_KEY, type.getKey().get(0).getName());
+        assertEquals("User_Code", type.getKey().get(0).getName());
     }
 }

@@ -2,13 +2,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper">
-    <select id="selectParagonRawListingRemarks" resultType="map" resultSetType="SCROLL_SENSITIVE">
-        select *
-        from ParagonRawListingRemarks LIMIT #{param1}, #{param2}
+    <select id="selectAllEntities" resultType="map" resultSetType="SCROLL_SENSITIVE">
+        ${selectStatement}
     </select>
 
-    <select id="selectParagonRawListingRemarksById" resultType="map">
-        select *
-        from ParagonRawListingRemarks where Mls_Number=#{id}
+    <update id="updateEntity">
+        ${updateStatement}
+    </update>
+
+    <update id="insertEntity">
+        ${insertStatement}
+    </update>
+
+    <select id="selectEntity">
+        ${selectStatement}
     </select>
 </mapper>

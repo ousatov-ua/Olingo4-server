@@ -22,9 +22,9 @@ public class ParagonRawListingFeaturesCsdlEntityTypeProviderTest {
 
         // Verify
         assertEquals(ET_PRLISTING_FEATURES_NAME, type.getName());
-        assertEquals("Edm.String", type.getProperty(ParagonRawListingFeaturesMapper.PK_KEY).getType());
+        assertEquals("Edm.String", type.getProperty("Mls_Number").getType());
         assertEquals(97, type.getProperties().size());
         assertEquals(1, type.getKey().size());
-        assertEquals(ParagonRawListingFeaturesMapper.PK_KEY, type.getKey().get(0).getName());
+        assertEquals("Mls_Number", type.getKey().get(0).getName());
     }
 }

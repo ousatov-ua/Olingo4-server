@@ -28,8 +28,8 @@ import java.util.Locale;
  */
 public class NmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
 
-    private OData odata;
     private final Olingo4Storage storage;
+    private OData odata;
     private ServiceMetadata serviceMetadata;
 
     public NmrlsEntityPrimitiveProcessor(Olingo4Storage storage) {

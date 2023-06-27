@@ -1,6 +1,5 @@
 package com.olus.olingo4.nnmrls.service.provider;
 
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingFeaturesMapper;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -122,11 +121,11 @@ public class ParagonRawListingFeaturesCsdlEntityTypeProvider {
         var property_95 = new CsdlProperty().setName("LFD_ZG___Green_Feature").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
         var property_96 = new CsdlProperty().setName("SystemId").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
         var entityType = new CsdlEntityType();
-        entityType.setProperties(Arrays.asList(property_0,property_1,property_2,property_3,property_4,property_5,property_6,property_7,property_8,property_9,property_10,property_11,property_12,property_13,property_14,property_15,property_16,property_17,property_18,property_19,property_20,property_21,property_22,property_23,property_24,property_25,property_26,property_27,property_28,property_29,property_30,property_31,property_32,property_33,property_34,property_35,property_36,property_37,property_38,property_39,property_40,property_41,property_42,property_43,property_44,property_45,property_46,property_47,property_48,property_49,property_50,property_51,property_52,property_53,property_54,property_55,property_56,property_57,property_58,property_59,property_60,property_61,property_62,property_63,property_64,property_65,property_66,property_67,property_68,property_69,property_70,property_71,property_72,property_73,property_74,property_75,property_76,property_77,property_78,property_79,property_80,property_81,property_82,property_83,property_84,property_85,property_86,property_87,property_88,property_89,property_90,property_91,property_92,property_93,property_94,property_95,property_96));
+        entityType.setProperties(Arrays.asList(property_0, property_1, property_2, property_3, property_4, property_5, property_6, property_7, property_8, property_9, property_10, property_11, property_12, property_13, property_14, property_15, property_16, property_17, property_18, property_19, property_20, property_21, property_22, property_23, property_24, property_25, property_26, property_27, property_28, property_29, property_30, property_31, property_32, property_33, property_34, property_35, property_36, property_37, property_38, property_39, property_40, property_41, property_42, property_43, property_44, property_45, property_46, property_47, property_48, property_49, property_50, property_51, property_52, property_53, property_54, property_55, property_56, property_57, property_58, property_59, property_60, property_61, property_62, property_63, property_64, property_65, property_66, property_67, property_68, property_69, property_70, property_71, property_72, property_73, property_74, property_75, property_76, property_77, property_78, property_79, property_80, property_81, property_82, property_83, property_84, property_85, property_86, property_87, property_88, property_89, property_90, property_91, property_92, property_93, property_94, property_95, property_96));
 
         // create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
-        propertyRef.setName(ParagonRawListingFeaturesMapper.PK_KEY);
+        propertyRef.setName("Mls_Number");
 
         // configure EntityType
         entityType.setName(ET_PRLISTING_FEATURES_NAME);

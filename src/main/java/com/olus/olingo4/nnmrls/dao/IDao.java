@@ -10,98 +10,41 @@ import java.util.Optional;
  * @author Oleksii Usatov
  */
 public interface IDao {
-
     /**
-     * Fetch all ParagonRawAgents
+     * Select entity
      *
-     * @param offset offset (aka skip)
-     * @param limit  limit (aka top)
-     * @return list of agents
+     * @param tableName Name of table
+     * @param offset    offset (aka skip)
+     * @param limit     limit (aka top)
+     * @return list of {@link Map}
      */
-    List<Map<String, Object>> selectAllParagonRawAgents(int offset, int limit);
+    List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit);
 
     /**
-     * Fetch specific ParagonRawAgent
+     * Select entity
      *
-     * @param id id of entity
-     * @return map
+     * @param tableName Name of table
+     * @param keyName   key name
+     * @param key       key value
+     * @return Optional of {@link Map}
      */
-    Optional<Map<String, Object>> selectParagonRawAgentById(String id);
+    Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key);
 
     /**
-     * Fetch all ParagonRawOffices
+     * Insert any entity
      *
-     * @param offset offset (aka skip)
-     * @param limit  limit (aka top)
-     * @return list of offices
-     */
-    List<Map<String, Object>> selectAllParagonRawOffices(int offset, int limit);
-
-    /**
-     * Fetch specific ParagonRawOffice
-     *
-     * @param id id of entity
-     * @return map
-     */
-    Optional<Map<String, Object>> selectParagonRawOfficeById(String id);
-
-    /**
-     * Fetch all ParagonRawListings
-     *
-     * @param offset offset (aka skip)
-     * @param limit  limit (aka top)
-     * @return list of listings
-     */
-    List<Map<String, Object>> selectAllParagonRawListings(int offset, int limit);
-
-    /**
-     * Fetch specific ParagonRawListing
-     *
-     * @param id id of entity
-     * @return map
-     */
-    Optional<Map<String, Object>> selectParagonRawListingById(String id);
-
-    /**
-     * Fetch specific ParagonRawListingFeatures
-     *
-     * @param id id of entity
-     * @return map
-     */
-    Optional<Map<String, Object>> selectParagonRawListingFeaturesById(String id);
-
-    /**
-     * Fetch all ParagonRawListingFeatures
-     *
-     * @param offset offset (aka skip)
-     * @param limit  limit (aka top)
-     * @return list of features
-     */
-    List<Map<String, Object>> selectAllParagonRawListingFeatures(int offset, int limit);
-
-    /**
-     * Fetch specific ParagonRawListingRemarks
-     *
-     * @param id id of entity
-     * @return map
-     */
-    Optional<Map<String, Object>> selectParagonRawListingRemarksById(String id);
-
-
-    /**
-     * Fetch all ParagonRawListingRemarks
-     *
-     * @param offset offset (aka skip)
-     * @param limit  limit (aka top)
-     * @return list of remarks
-     */
-    List<Map<String, Object>> selectAllParagonRawListingRemarks(int offset, int limit);
-
-    /**
-     * Insert ParagonRawAgent
-     *
-     * @param data {@link Map}
+     * @param tableName Name of table
+     * @param data      {@link Map}
      * @return {@link Map}
      */
-    Map<String, Object> insertParagonRawAgent(Map<String, Object> data);
+    Map<String, Object> insertEntity(String tableName, String key, Map<String, Object> data);
+
+    /**
+     * Update any entity
+     *
+     * @param keys - keys
+     * @param data - params {@link Map}
+     * @return number of rows updated
+     */
+    int updateEntity(String tableName, Map<String, Object> keys, Map<String, Object> data);
 }
