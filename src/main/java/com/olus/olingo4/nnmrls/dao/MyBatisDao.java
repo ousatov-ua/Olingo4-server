@@ -57,7 +57,7 @@ public class MyBatisDao implements IDao {
             var columns = NnmrlsEdmProvider.getCsdlEntityType(fqn).getProperties()
                     .stream()
                     .map(prop -> {
-                        var name = prop.getName().contains(".") ? "`" + prop.getName() + "`" : prop.getName();
+                        var name = columnName(prop.getName());
                         return SqlColumn.of(name, table);
                     })
                     .collect(Collectors.toList());
@@ -93,6 +93,10 @@ public class MyBatisDao implements IDao {
         return null;
     }
 
+    private static String columnName(String columnName) {
+        return columnName.contains(".") ? "`" + columnName + "`" : columnName;
+    }
+
     /**
      * Get mybatis resource, created for test purpose to override it
      *
@@ -125,6 +129,7 @@ public class MyBatisDao implements IDao {
     @Override
     public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key) {
         final var table = SqlTable.of(tableName);
+        keyName = columnName(keyName);
         try (var session = sqlSessionFactory.openSession()) {
             var mapper = getMapper(tableName, session);
             if (mapper != null) {
@@ -151,7 +156,8 @@ public class MyBatisDao implements IDao {
                 var sqlBuilder = SqlBuilder.insert(data);
                 var insert = sqlBuilder.into(table);
                 for (var param : data.entrySet()) {
-                    insert = insert.map(SqlColumn.of(param.getKey(), table)).toProperty(param.getKey());
+                    var paramName = columnName(param.getKey());
+                    insert = insert.map(SqlColumn.of(paramName, table)).toProperty(param.getKey());
                 }
                 mapper.insertEntity(insert.build().render(RenderingStrategies.MYBATIS3));
                 return selectEntity(tableName, keyName, (String) data.get(keyName)).get();
@@ -169,10 +175,12 @@ public class MyBatisDao implements IDao {
         try (var session = sqlSessionFactory.openSession(true)) {
             var sqlBuilder = SqlBuilder.update(table);
             for (var param : data.entrySet()) {
-                sqlBuilder = sqlBuilder.set(SqlColumn.of(param.getKey(), table)).equalTo(param.getValue());
+                var paramName = columnName(param.getKey());
+                sqlBuilder = sqlBuilder.set(SqlColumn.of(paramName, table)).equalTo(param.getValue());
             }
             UpdateDSL<UpdateModel>.UpdateWhereBuilder updateBuilder = null;
             for (var key : keys.entrySet()) {
+                var keyName = columnName(key.getKey());
                 updateBuilder = sqlBuilder.where(SqlColumn.of(key.getKey(), table), SqlBuilder.isEqualTo(key.getValue()));
             }
             if (updateBuilder != null) {
