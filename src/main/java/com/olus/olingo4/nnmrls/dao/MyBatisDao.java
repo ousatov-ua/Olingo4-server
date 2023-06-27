@@ -181,7 +181,7 @@ public class MyBatisDao implements IDao {
             UpdateDSL<UpdateModel>.UpdateWhereBuilder updateBuilder = null;
             for (var key : keys.entrySet()) {
                 var keyName = columnName(key.getKey());
-                updateBuilder = sqlBuilder.where(SqlColumn.of(key.getKey(), table), SqlBuilder.isEqualTo(key.getValue()));
+                updateBuilder = sqlBuilder.where(SqlColumn.of(keyName, table), SqlBuilder.isEqualTo(key.getValue()));
             }
             if (updateBuilder != null) {
                 var finalUpdate = updateBuilder.build()
