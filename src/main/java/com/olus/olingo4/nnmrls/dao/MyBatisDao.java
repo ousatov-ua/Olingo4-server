@@ -18,8 +18,6 @@ import org.mybatis.dynamic.sql.SqlTable;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.update.UpdateDSL;
 import org.mybatis.dynamic.sql.update.UpdateModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -44,8 +42,6 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PROF
 public class MyBatisDao implements IDao {
     private static final int DEFAULT_ROW_LIMIT = 30;
 
-    @SuppressWarnings("unused")
-    private static final Logger LOG = LoggerFactory.getLogger(MyBatisDao.class);
     private final SqlSessionFactory sqlSessionFactory;
     private final Map<String, Collection<SqlColumn<Object>>> tableToAllColumns = new HashMap<>();
 
