@@ -106,6 +106,9 @@ public class MyBatisDao implements IDao {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit) {
         final var table = SqlTable.of(tableName);
@@ -128,6 +131,9 @@ public class MyBatisDao implements IDao {
         return List.of();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key) {
         final var table = SqlTable.of(tableName);
