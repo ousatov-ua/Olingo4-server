@@ -6,7 +6,9 @@ import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingFeaturesMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper;
 import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawOfficeMapper;
+import com.olus.olingo4.nnmrls.exception.DaoException;
 import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -38,6 +40,7 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PROF
  *
  * @author Oleksii Usatov
  */
+@Slf4j
 public class MyBatisDao implements IDao {
     private static final int DEFAULT_ROW_LIMIT = 30;
 
@@ -122,6 +125,9 @@ public class MyBatisDao implements IDao {
                         .render(RenderingStrategies.MYBATIS3);
                 return mapper.selectAllEntities(select);
             }
+        } catch (Exception e) {
+            log.error("Could not select objects!", e);
+            throw new DaoException("Could not select objects!");
         }
         return List.of();
     }
@@ -141,6 +147,9 @@ public class MyBatisDao implements IDao {
                         .render(RenderingStrategies.MYBATIS3);
                 return Optional.of(mapper.selectEntity(select));
             }
+        } catch (Exception e) {
+            log.error("Could not select object!", e);
+            throw new DaoException("Could not select object!");
         }
         return Optional.empty();
     }
@@ -160,10 +169,13 @@ public class MyBatisDao implements IDao {
                     insert = insert.map(SqlColumn.of(paramName, table)).toProperty(param.getKey());
                 }
                 mapper.insertEntity(insert.build().render(RenderingStrategies.MYBATIS3));
-                return selectEntity(tableName, keyName, (String) data.get(keyName)).get();
             }
+        } catch (Exception e) {
+            log.error("Could not insert object!", e);
+            throw new DaoException("Could not insert object!");
         }
-        return null;
+        var opt = selectEntity(tableName, keyName, (String) data.get(keyName));
+        return opt.orElse(null);
     }
 
     /**
@@ -191,6 +203,9 @@ public class MyBatisDao implements IDao {
                     return mapper.updateEntity(finalUpdate);
                 }
             }
+        } catch (Exception e) {
+            log.error("Could not update object!", e);
+            throw new DaoException("Could not update object!");
         }
         return 0;
     }
