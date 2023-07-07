@@ -125,14 +125,7 @@ public class MyBatisDao implements IDao {
         try (var session = sqlSessionFactory.openSession()) {
             var mapper = getMapper(tableName, session);
             if (mapper != null) {
-                SqlColumn<?>[] columns;
-                if (columnNames.isEmpty()) {
-                    columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
-                } else {
-                    columns = columnNames.stream()
-                            .map(col -> SqlColumn.of(col, table))
-                            .toArray(SqlColumn[]::new);
-                }
+                var columns = getSqlColumns(table, columnNames);
                 var select = SqlBuilder.select(columns)
                         .from(table)
                         .limit(limit(limit))
@@ -146,6 +139,16 @@ public class MyBatisDao implements IDao {
             throw new DaoException("Could not select objects!");
         }
         return List.of();
+    }
+
+    private SqlColumn<?>[] getSqlColumns(SqlTable table, List<String> columnNames) {
+        if (columnNames.isEmpty()) {
+            return tableToAllColumns.get(table.tableNameAtRuntime()).toArray(new SqlColumn[0]);
+        } else {
+            return columnNames.stream()
+                    .map(col -> SqlColumn.of(col, table))
+                    .toArray(SqlColumn[]::new);
+        }
     }
 
     /**
@@ -167,14 +170,7 @@ public class MyBatisDao implements IDao {
         try (var session = sqlSessionFactory.openSession()) {
             var mapper = getMapper(tableName, session);
             if (mapper != null) {
-                SqlColumn<?>[] columns;
-                if (columnNames.isEmpty()) {
-                    columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
-                } else {
-                    columns = columnNames.stream()
-                            .map(col -> SqlColumn.of(col, table))
-                            .toArray(SqlColumn[]::new);
-                }
+                var columns = getSqlColumns(table, columnNames);
                 var select = SqlBuilder.select(columns)
                         .from(table)
                         .where(SqlColumn.of(keyName, table), SqlBuilder.isEqualTo(key))

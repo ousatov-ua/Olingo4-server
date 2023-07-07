@@ -51,6 +51,7 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
             ET_PRLISTING_FEATURES_FQN,
             ET_PRLISTING_REMARKS_FQN
     );
+
     // Entity Set Names
     public static final String ES_PRAGENT_NAME = "ParagonRawAgents";
     public static final String ES_PROFFICE_NAME = "ParagonRawOffices";
