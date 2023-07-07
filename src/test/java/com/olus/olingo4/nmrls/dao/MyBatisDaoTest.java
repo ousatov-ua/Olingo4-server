@@ -355,5 +355,50 @@ class MyBatisDaoTest extends FuncDbTest {
         assertEquals("public remarks 2", listing1.get("Extended_Public_Remarks"));
         assertEquals(2L, listing1.get("SystemId"));
     }
+
+    @Test
+    void testSelectParagonRawListingDataRemarksWithRowBoundsAndColumns() {
+
+        // Setup
+        runCommandForContent("sql/insertParagonRawListingRemarks.sql");
+
+        // Execute
+        var result = myBatisDao.selectAllEntities("ParagonRawListingRemarks", 1, 1,
+                List.of("Mls_Number", "Extended_Public_Remarks"));
+
+        // Verify
+        var listing1 = result.get(0);
+        assertEquals("code2", listing1.get("Mls_Number"));
+        assertEquals("public remarks 2", listing1.get("Extended_Public_Remarks"));
+        assertEquals(2, listing1.size());
+    }
+
     // ParagonRawListingRemarks end
+
+    // ParagonRawListingFeatures start
+    @Test
+    void testSelectParagonRawListingFeaturesData() {
+
+        // Setup
+        runCommandForContent("sql/insertParagonRawListingFeatures.sql");
+
+        // Execute
+        var result = myBatisDao.selectAllEntities("ParagonRawListingFeatures", -1, -1,
+                List.of("Mls_Number", "LFD_ACCESS"));
+
+        // Verify
+        assertEquals(2, result.size());
+        var listing1 = result.get(0);
+        assertEquals("code1", listing1.get("Mls_Number"));
+        assertEquals("{\"Access\": \"Public\"}", listing1.get("LFD_ACCESS"));
+
+        var listing2 = result.get(1);
+        assertEquals("code2", listing2.get("Mls_Number"));
+        assertEquals("{\"Access\": \"Private\"}", listing2.get("LFD_ACCESS"));
+
+        assertEquals(2, listing1.size());
+        assertEquals(2, listing2.size());
+    }
+
+    // ParagonRawListingFeatures end
 }
