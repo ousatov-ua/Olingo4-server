@@ -21,6 +21,7 @@ import org.mybatis.dynamic.sql.update.UpdateModel;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,11 +112,27 @@ public class MyBatisDao implements IDao {
      */
     @Override
     public List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit) {
+        return selectAllEntities(tableName, offset, limit, Collections.emptyList());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit,
+                                                       List<String> columnNames) {
         final var table = SqlTable.of(tableName);
         try (var session = sqlSessionFactory.openSession()) {
             var mapper = getMapper(tableName, session);
             if (mapper != null) {
-                var columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
+                SqlColumn<?>[] columns;
+                if (columnNames.isEmpty()) {
+                    columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
+                } else {
+                    columns = columnNames.stream()
+                            .map(col -> SqlColumn.of(col, table))
+                            .toArray(SqlColumn[]::new);
+                }
                 var select = SqlBuilder.select(columns)
                         .from(table)
                         .limit(limit(limit))
@@ -136,12 +153,28 @@ public class MyBatisDao implements IDao {
      */
     @Override
     public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key) {
+        return selectEntity(tableName, keyName, key, Collections.emptyList());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key,
+                                                      List<String> columnNames) {
         final var table = SqlTable.of(tableName);
         keyName = columnName(keyName);
         try (var session = sqlSessionFactory.openSession()) {
             var mapper = getMapper(tableName, session);
             if (mapper != null) {
-                var columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
+                SqlColumn<?>[] columns;
+                if (columnNames.isEmpty()) {
+                    columns = tableToAllColumns.get(tableName).toArray(new SqlColumn[0]);
+                } else {
+                    columns = columnNames.stream()
+                            .map(col -> SqlColumn.of(col, table))
+                            .toArray(SqlColumn[]::new);
+                }
                 var select = SqlBuilder.select(columns)
                         .from(table)
                         .where(SqlColumn.of(keyName, table), SqlBuilder.isEqualTo(key))
@@ -176,7 +209,7 @@ public class MyBatisDao implements IDao {
             log.error("Could not insert object!", e);
             throw new DaoException("Could not insert object!");
         }
-        var opt = selectEntity(tableName, keyName, (String) data.get(keyName));
+        var opt = selectEntity(tableName, keyName, (String) data.get(keyName), Collections.emptyList());
         return opt.orElse(null);
     }
 

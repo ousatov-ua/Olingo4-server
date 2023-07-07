@@ -18,7 +18,10 @@ import org.apache.olingo.server.api.serializer.SerializerException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Read a single Entity processor
@@ -51,7 +54,26 @@ public class NmrlsEntityProcessor implements EntityProcessor {
 
         // Retrieve the data from backend
         var keyPredicates = uriResourceEntitySet.getKeyPredicates();
-        var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates);
+
+        // Get select options
+        var selectOption = uriInfo.getSelectOption();
+        List<String> selectedColumns = Collections.emptyList();
+        if (selectOption != null) {
+            selectedColumns = selectOption.getSelectItems()
+                    .stream()
+                    .map(option ->
+                            option.getResourcePath().getUriResourceParts().get(option.getResourcePath().getUriResourceParts().size() - 1).getSegmentValue())
+                    .collect(Collectors.toList());
+            selectedColumns.add(keyPredicates.get(0).getName());
+        }
+
+        // Check for parameter 'columns'
+        List<String> columns = Collections.emptyList();
+        if (!selectedColumns.isEmpty()) {
+            columns = selectedColumns;
+        }
+
+        var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates, columns);
         if (entityOpt.isEmpty()) {
             throw new ODataApplicationException("Entity not found", HttpStatusCode.NOT_FOUND.getStatusCode(),
                     Locale.US);
@@ -63,8 +85,11 @@ public class NmrlsEntityProcessor implements EntityProcessor {
 
         var contextUrl = ContextURL.with().entitySet(edmEntitySet).suffix(ContextURL.Suffix.ENTITY).build();
 
+
         // Expand and select currently not supported
-        var options = EntitySerializerOptions.with().contextURL(contextUrl).build();
+        var options = EntitySerializerOptions.with()
+                .select(selectOption)
+                .contextURL(contextUrl).build();
 
         var serializer = this.odata.createSerializer(responseFormat);
         var serializerResult = serializer.entity(serviceMetadata, entityType, entity, options);

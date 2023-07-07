@@ -19,6 +19,7 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.api.uri.UriResourceProperty;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -76,7 +77,7 @@ public class NmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
           Retrieve data from backend
           Retrieve the entity data, for which the property has to be read
          */
-        var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates);
+        var entityOpt = storage.getDataByKeys(edmEntitySet, keyPredicates, List.of(edmPropertyName, keyPredicates.get(0).getName()));
         if (entityOpt.isEmpty()) { // Bad request
             throw new ODataApplicationException("Entity not found", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
         }

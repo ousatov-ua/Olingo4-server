@@ -10,9 +10,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -225,6 +227,28 @@ class MyBatisDaoTest extends FuncDbTest {
 
         assertEquals("2003-05-03", result.get("Date_Available").toString());
         assertEquals("2004-06-07 02:03:04.0", result.get("Doc_Timestamp").toString());
+    }
+
+    @Test
+    void testSelectParagonRawListingDataByIdWithColumns() {
+
+        // Setup
+        runCommandForContent("sql/insertParagonRawListing.sql");
+
+        // Execute
+        var resultOpt = myBatisDao.selectEntity("ParagonRawListing", "Mls_Number", "code1",
+                List.of("Acres_of_Water_Rights", "Mls_Number"));
+
+        // Verify
+        assertTrue(resultOpt.isPresent());
+        var result = resultOpt.get();
+        // Verify
+        assertEquals("code1", result.get("Mls_Number"));
+        assertNull(result.get("_1_Bedroom___Number__Baths"));
+        assertEquals(1.25f, result.get("Acres_of_Water_Rights"));
+
+        assertNull(result.get("Date_Available"));
+        assertNull(result.get("Doc_Timestamp"));
     }
 
     @Test

@@ -18,6 +18,10 @@ import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.api.uri.queryoption.SkipOption;
 import org.apache.olingo.server.api.uri.queryoption.TopOption;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * This class is invoked by the Olingo framework when the the OData service is invoked order to display a list/collection of data (entities).
  * This is the case if an EntitySet is requested by the user.
@@ -67,8 +71,25 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
             limit = topOption.getValue();
         }
 
+        // Get select options
+        var selectOption = uriInfo.getSelectOption();
+        List<String> selectedColumns = Collections.emptyList();
+        if (selectOption != null) {
+            selectedColumns = selectOption.getSelectItems()
+                    .stream()
+                    .map(option ->
+                            option.getResourcePath().getUriResourceParts().get(option.getResourcePath().getUriResourceParts().size() - 1).getSegmentValue())
+                    .collect(Collectors.toList());
+            selectedColumns.add(edmEntitySet.getEntityType().getKeyPropertyRefs().get(0).getName());
+        }
+
+        List<String> columns = Collections.emptyList();
+        if (!selectedColumns.isEmpty()) {
+            columns = selectedColumns;
+        }
+
         // Fetch the data from backend for this requested EntitySetName // it has to be delivered as EntitySet object
-        var entitySet = storage.getData(edmEntitySet, offset, limit);
+        var entitySet = storage.getData(edmEntitySet, offset, limit, columns);
 
         // Create a serializer based on the requested format (json)
         var serializer = odata.createSerializer(responseFormat);
@@ -79,7 +100,11 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
 
         final String id = request.getRawBaseUri() + "/" + edmEntitySet.getName();
         var opts =
-                EntityCollectionSerializerOptions.with().id(id).contextURL(contextUrl).build();
+                EntityCollectionSerializerOptions.with()
+                        .select(selectOption)
+                        .id(id)
+                        .contextURL(contextUrl)
+                        .build();
         var serializedContent = serializer.entityCollection(serviceMetadata, edmEntityType, entitySet, opts);
 
         // Finally: configure the response object: set the body, headers and status code

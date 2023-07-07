@@ -81,7 +81,7 @@ public class Olingo4Storage {
      */
     public EntityCollection getData(EdmEntitySet edmEntitySet,
                                     int offset,
-                                    int limit) throws ODataApplicationException {
+                                    int limit, List<String> columns) throws ODataApplicationException {
 
         var pragentsCollection = new EntityCollection();
 
@@ -98,7 +98,7 @@ public class Olingo4Storage {
                 return Olingo4Converter.convertListOfMaps(ES_PRAGENT_NAME,
                         key,
                         mybatisDao.selectAllEntities(NnmrlsEdmProvider.ES_TO_ET.get(edmEntitySet.getName()),
-                                offset, limit));
+                                offset, limit, columns));
         }
         return pragentsCollection;
     }
@@ -110,7 +110,8 @@ public class Olingo4Storage {
      * @return data of requested entity set
      */
     public Optional<Entity> getDataByKeys(EdmEntitySet edmEntitySet,
-                                          List<UriParameter> keyParams) throws ODataApplicationException {
+                                          List<UriParameter> keyParams,
+                                          List<String> columns) {
         var edmEntityType = edmEntitySet.getEntityType();
 
         // This is only required if we have more than one Entity Type
@@ -121,13 +122,13 @@ public class Olingo4Storage {
             case NnmrlsEdmProvider.ET_PRLISTING_FEATURES_NAME:
             case NnmrlsEdmProvider.ET_PRLISTING_REMARKS_NAME:
                 var key = keyParams.get(0);
-                var result = mybatisDao.selectEntity(edmEntityType.getName(), key.getName(), getKeyValue(key.getText()));
+                var result = mybatisDao.selectEntity(edmEntityType.getName(), key.getName(), getKeyValue(key.getText()),
+                        columns);
                 return result.map(stringObjectMap -> Olingo4Converter.convertMap(ET_TO_ES.get(edmEntityType.getName()),
                         key.getName(), stringObjectMap
                 ));
             default:
                 return Optional.empty();
-
         }
     }
 

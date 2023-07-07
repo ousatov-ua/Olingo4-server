@@ -10,8 +10,10 @@ import java.util.Optional;
  * @author Oleksii Usatov
  */
 public interface IDao {
+
+
     /**
-     * Select entity
+     * Select entities
      *
      * @param tableName Name of table
      * @param offset    offset (aka skip)
@@ -19,6 +21,18 @@ public interface IDao {
      * @return list of {@link Map}
      */
     List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit);
+
+    /**
+     * Select entities
+     *
+     * @param tableName Name of table
+     * @param offset    offset (aka skip)
+     * @param limit     limit (aka top)
+     * @param columns   columns to select`
+     * @return list of {@link Map}
+     */
+    List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit, List<String> columns);
+
 
     /**
      * Select entity
@@ -29,6 +43,17 @@ public interface IDao {
      * @return Optional of {@link Map}
      */
     Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key);
+
+    /**
+     * Select entity
+     *
+     * @param tableName Name of table
+     * @param keyName   key name
+     * @param key       key value
+     * @param columns   columns to select`
+     * @return Optional of {@link Map}
+     */
+    Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key, List<String> columns);
 
     /**
      * Insert any entity
