@@ -18,10 +18,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="mybatis/ParagonRawAgentMapper.xml"/>
-        <mapper resource="mybatis/ParagonRawOfficeMapper.xml"/>
-        <mapper resource="mybatis/ParagonRawListingMapper.xml"/>
-        <mapper resource="mybatis/ParagonRawListingFeaturesMapper.xml"/>
-        <mapper resource="mybatis/ParagonRawListingRemarksMapper.xml"/>
+        <mapper resource="mybatis/Mapper.xml"/>
     </mappers>
 </configuration>

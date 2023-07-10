@@ -78,6 +78,9 @@ public class Olingo4Converter {
      */
     private static URI createId(String entitySetName, Object id) {
         try {
+            if (id instanceof String) {
+                return new URI(entitySetName + "('" + id + "')");
+            }
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException e) {
             throw new ODataRuntimeException("Unable to create id for entity: " + entitySetName, e);

@@ -20,12 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PRAGENT_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PRLISTING_FEATURES_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PRLISTING_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PRLISTING_REMARKS_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ES_PROFFICE_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_TO_ES;
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.*;
 
 /**
  * Storage class to fetch {@link EntityCollection}
@@ -87,15 +82,21 @@ public class Olingo4Storage {
 
         // Check for which EdmEntitySet the data is requested
         switch (edmEntitySet.getName()) {
-            case ES_PRAGENT_NAME:
-            case ES_PROFFICE_NAME:
-            case ES_PRLISTING_NAME:
-            case ES_PRLISTING_FEATURES_NAME:
-            case ES_PRLISTING_REMARKS_NAME:
-                var fqn = NnmrlsEdmProvider.ES_TO_EF.get(edmEntitySet.getName());
+            case ES_LOOKUPS_NAME:
+            case ES_MEMBER_DATA_NAME:
+            case ES_OFFICE_DATA_NAME:
+            case ES_PROP_DATA_BUISINESS_NAME:
+            case ES_PROP_DATA_CHARACT_NAME:
+            case ES_PROP_DATA_HOA_NAME:
+            case ES_PROP_DATA_LIST_NAME:
+            case ES_PROP_DATA_LOC_NAME:
+            case ES_PROP_DATA_STRUCT_NAME:
+            case ES_PROP_DATA_TAX_NAME:
+            case ES_PROP_DATA_TOUR_NAME:
+                var fqn = ES_TO_EF.get(edmEntitySet.getName());
                 var csdlEntity = NnmrlsEdmProvider.getCsdlEntityType(fqn);
                 var key = csdlEntity.getKey().get(0).getName();
-                return Olingo4Converter.convertListOfMaps(ES_PRAGENT_NAME,
+                return Olingo4Converter.convertListOfMaps(edmEntitySet.getName(),
                         key,
                         mybatisDao.selectAllEntities(NnmrlsEdmProvider.ES_TO_ET.get(edmEntitySet.getName()),
                                 offset, limit, columns));
@@ -116,11 +117,17 @@ public class Olingo4Storage {
 
         // This is only required if we have more than one Entity Type
         switch (edmEntityType.getName()) {
-            case NnmrlsEdmProvider.ET_PRAGENT_NAME:
-            case NnmrlsEdmProvider.ET_PROFFICE_NAME:
-            case NnmrlsEdmProvider.ET_PRLISTING_NAME:
-            case NnmrlsEdmProvider.ET_PRLISTING_FEATURES_NAME:
-            case NnmrlsEdmProvider.ET_PRLISTING_REMARKS_NAME:
+            case ET_LOOKUPS_NAME:
+            case ET_MEMBER_DATA_NAME:
+            case ET_OFFICE_DATA_NAME:
+            case ET_PROP_DATA_BUISINESS_NAME:
+            case ET_PROP_DATA_CHARACT_NAME:
+            case ET_PROP_DATA_HOA_NAME:
+            case ET_PROP_DATA_LIST_NAME:
+            case ET_PROP_DATA_LOC_NAME:
+            case ET_PROP_DATA_STRUCT_NAME:
+            case ET_PROP_DATA_TAX_NAME:
+            case ET_PROP_DATA_TOUR_NAME:
                 var key = keyParams.get(0);
                 var result = mybatisDao.selectEntity(edmEntityType.getName(), key.getName(), getKeyValue(key.getText()),
                         columns);
@@ -148,11 +155,17 @@ public class Olingo4Storage {
         var params = Olingo4Converter.convertEntity(entityToCreate);
 
         switch (edmEntityType.getName()) {
-            case NnmrlsEdmProvider.ET_PRAGENT_NAME:
-            case NnmrlsEdmProvider.ET_PROFFICE_NAME:
-            case NnmrlsEdmProvider.ET_PRLISTING_NAME:
-            case NnmrlsEdmProvider.ET_PRLISTING_FEATURES_NAME:
-            case NnmrlsEdmProvider.ET_PRLISTING_REMARKS_NAME:
+            case ET_LOOKUPS_NAME:
+            case ET_MEMBER_DATA_NAME:
+            case ET_OFFICE_DATA_NAME:
+            case ET_PROP_DATA_BUISINESS_NAME:
+            case ET_PROP_DATA_CHARACT_NAME:
+            case ET_PROP_DATA_HOA_NAME:
+            case ET_PROP_DATA_LIST_NAME:
+            case ET_PROP_DATA_LOC_NAME:
+            case ET_PROP_DATA_STRUCT_NAME:
+            case ET_PROP_DATA_TAX_NAME:
+            case ET_PROP_DATA_TOUR_NAME:
                 return Olingo4Converter.convertMap(NnmrlsEdmProvider.ES_TO_ET.get(edmEntityType.getName()),
                         key, mybatisDao.insertEntity(edmEntityType.getName(), key, params));
             default:

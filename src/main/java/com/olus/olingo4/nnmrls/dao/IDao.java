@@ -42,7 +42,7 @@ public interface IDao {
      * @param key       key value
      * @return Optional of {@link Map}
      */
-    Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key);
+    Optional<Map<String, Object>> selectEntity(String tableName, String keyName, Object key);
 
     /**
      * Select entity
@@ -53,7 +53,7 @@ public interface IDao {
      * @param columns   columns to select`
      * @return Optional of {@link Map}
      */
-    Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key, List<String> columns);
+    Optional<Map<String, Object>> selectEntity(String tableName, String keyName, Object key, List<String> columns);
 
     /**
      * Insert any entity

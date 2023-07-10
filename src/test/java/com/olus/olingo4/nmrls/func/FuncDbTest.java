@@ -19,11 +19,19 @@ import java.util.List;
 @Slf4j
 public abstract class FuncDbTest {
     private static final int DB_PORT = 49152;
-    private static final List<String> DDLS = List.of("ddl/ParagonRawAgent.sql",
-            "ddl/ParagonRawListing.sql",
-            "ddl/ParagonRawListingFeatures.sql",
-            "ddl/ParagonRawListingRemarks.sql",
-            "ddl/ParagonRawOffice.sql");
+    private static final List<String> DDLS = List.of(
+            "ddl/Lookups.sql",
+            "ddl/MemberData.sql",
+            "ddl/OfficeData.sql",
+            "ddl/PropertyDataBuisiness.sql",
+            "ddl/PropertyDataCharacteristics.sql",
+            "ddl/PropertyDataHOA.sql",
+            "ddl/PropertyDataListing.sql",
+            "ddl/PropertyDataLocation.sql",
+            "ddl/PropertyDataStructure.sql",
+            "ddl/PropertyDataTax.sql",
+            "ddl/PropertyDataTour.sql"
+    );
 
     private static DB db;
 

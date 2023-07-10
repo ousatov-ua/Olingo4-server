@@ -1,11 +1,6 @@
 package com.olus.olingo4.nnmrls.dao;
 
 import com.olus.olingo4.nnmrls.dao.mappers.Mapper;
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawAgentMapper;
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingFeaturesMapper;
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingMapper;
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawListingRemarksMapper;
-import com.olus.olingo4.nnmrls.dao.mappers.ParagonRawOfficeMapper;
 import com.olus.olingo4.nnmrls.exception.DaoException;
 import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRAGENT_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRLISTING_FEATURES_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRLISTING_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PRLISTING_REMARKS_NAME;
-import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PROFFICE_NAME;
+import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.*;
 
 /**
  * Implementation for {@link IDao}
@@ -79,16 +70,19 @@ public class MyBatisDao implements IDao {
 
     private static Mapper getMapper(String tableName, SqlSession session) {
         switch (tableName) {
-            case ET_PRAGENT_NAME:
-                return session.getMapper(ParagonRawAgentMapper.class);
-            case ET_PROFFICE_NAME:
-                return session.getMapper(ParagonRawOfficeMapper.class);
-            case ET_PRLISTING_NAME:
-                return session.getMapper(ParagonRawListingMapper.class);
-            case ET_PRLISTING_FEATURES_NAME:
-                return session.getMapper(ParagonRawListingFeaturesMapper.class);
-            case ET_PRLISTING_REMARKS_NAME:
-                return session.getMapper(ParagonRawListingRemarksMapper.class);
+            case ET_LOOKUPS_NAME:
+            case ET_MEMBER_DATA_NAME:
+            case ET_OFFICE_DATA_NAME:
+            case ET_PROP_DATA_BUISINESS_NAME:
+            case ET_PROP_DATA_CHARACT_NAME:
+            case ET_PROP_DATA_HOA_NAME:
+            case ET_PROP_DATA_LIST_NAME:
+            case ET_PROP_DATA_LOC_NAME:
+            case ET_PROP_DATA_STRUCT_NAME:
+            case ET_PROP_DATA_TAX_NAME:
+            case ET_PROP_DATA_TOUR_NAME:
+                return session.getMapper(Mapper.class);
+
         }
         return null;
     }
@@ -155,7 +149,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key) {
+    public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, Object key) {
         return selectEntity(tableName, keyName, key, Collections.emptyList());
     }
 
@@ -163,7 +157,7 @@ public class MyBatisDao implements IDao {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, String key,
+    public Optional<Map<String, Object>> selectEntity(String tableName, String keyName, Object key,
                                                       List<String> columnNames) {
         final var table = SqlTable.of(tableName);
         keyName = columnName(keyName);
@@ -205,7 +199,7 @@ public class MyBatisDao implements IDao {
             log.error("Could not insert object!", e);
             throw new DaoException("Could not insert object!");
         }
-        var opt = selectEntity(tableName, keyName, (String) data.get(keyName), Collections.emptyList());
+        var opt = selectEntity(tableName, keyName, data.get(keyName), Collections.emptyList());
         return opt.orElse(null);
     }
 

@@ -1,5 +1,6 @@
 package com.olus.olingo4.nmrls.util;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -25,17 +26,19 @@ public class DdlUtil {
     /**
      * Self descriptive
      */
-    private static final Map<String, EdmPrimitiveTypeKind> DB_TYPE_TO_MAPPING_TYPE = Map.of(
-            "TINYINT", EdmPrimitiveTypeKind.Boolean,
-            "BLOB", EdmPrimitiveTypeKind.String,
-            "INT", EdmPrimitiveTypeKind.Int32,
-            "VARCHAR", EdmPrimitiveTypeKind.String,
-            "CHAR", EdmPrimitiveTypeKind.String,
-            "FLOAT", EdmPrimitiveTypeKind.Double,
-            "BOOLEAN", EdmPrimitiveTypeKind.Boolean,
-            "DATE", EdmPrimitiveTypeKind.Date,
-            "DATETIME", EdmPrimitiveTypeKind.DateTimeOffset,
-            "JSON", EdmPrimitiveTypeKind.String);
+    private static final Map<String, EdmPrimitiveTypeKind> DB_TYPE_TO_MAPPING_TYPE =
+            ImmutableMap.<String, EdmPrimitiveTypeKind>builder()
+                    .put("TINYINT", EdmPrimitiveTypeKind.Boolean)
+                    .put("BLOB", EdmPrimitiveTypeKind.String)
+                    .put("INT", EdmPrimitiveTypeKind.Int32)
+                    .put("VARCHAR", EdmPrimitiveTypeKind.String)
+                    .put("CHAR", EdmPrimitiveTypeKind.String)
+                    .put("FLOAT", EdmPrimitiveTypeKind.Double)
+                    .put("BOOLEAN", EdmPrimitiveTypeKind.Boolean)
+                    .put("DATE", EdmPrimitiveTypeKind.Date)
+                    .put("DATETIME", EdmPrimitiveTypeKind.DateTimeOffset)
+                    .put("TIMESTAMP", EdmPrimitiveTypeKind.DateTimeOffset)
+                    .put("JSON", EdmPrimitiveTypeKind.String).build();
 
     public static void main(String... args) {
         createMappings();
@@ -44,7 +47,7 @@ public class DdlUtil {
     @SuppressWarnings("unused")
     private static void createMappings() {
 
-        Set.of("ddl/ParagonRawAgent.sql")
+        Set.of("ddl/MemberData.sql")
                 .forEach(dbSqlFile -> {
                     try {
                         generateSourceCode(FileUtil.getFileContent(dbSqlFile));
@@ -70,7 +73,7 @@ public class DdlUtil {
         var columnNames = new LinkedList<String>();
         var myBatisColumnProperties = new LinkedList<String>();
         var number = new AtomicInteger(0);
-        try (var fileWriter = new FileWriter("java_code.java", true);
+        try (var fileWriter = new FileWriter("java_code.java", false);
              var fileWriterForStatements = new FileWriter("mybatis_code.sql", true)) {
             var properties = new LinkedList<String>();
             createTable.getColumnDefinitions().forEach(columnDefinition -> {

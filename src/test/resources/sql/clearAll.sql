@@ -1,5 +1,11 @@
-truncate table test.ParagonRawAgent;
-truncate table test.ParagonRawListing;
-truncate table test.ParagonRawListingFeatures;
-truncate table test.ParagonRawListingRemarks;
-truncate table test.ParagonRawOffice;
+truncate table test.Lookups;
+truncate table test.MemberData;
+truncate table test.OfficeData;
+truncate table test.PropertyDataBusiness;
+truncate table test.PropertyDataCharacteristics;
+truncate table test.PropertyDataHOA;
+truncate table test.PropertyDataListing;
+truncate table test.PropertyDataLocation;
+truncate table test.PropertyDataStructure;
+truncate table test.PropertyDataTax;
+truncate table test.PropertyDataTour;
