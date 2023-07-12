@@ -76,7 +76,7 @@ class MyBatisDaoTest extends FuncDbTest {
     }
 
     @Test
-    void testSelectParagonRawAgentDataWithRowBounds() {
+    void testSelectSelectLookupsDataWithRowBounds() {
 
         // Setup
         runCommandForContent("sql/insertLookups.sql");
@@ -171,4 +171,142 @@ class MyBatisDaoTest extends FuncDbTest {
     }
 
     // Lookups stop
+
+    // PropertyDataListing start
+
+    @Test
+    void testPropertyDataListingById() {
+
+        // Setup
+        runCommandForContent("sql/insertPropertyDataListing.sql");
+
+        // Execute
+        var resultOpt = myBatisDao.selectEntity("PropertyDataListing", "ListingId", 1);
+
+        // Verify
+        assertTrue(resultOpt.isPresent());
+        var result = resultOpt.get();
+        assertEquals(1L, result.get("ListingId"));
+        assertEquals("2023-09-09", result.get("ListingContractDate").toString());
+        assertEquals("2023-09-10 12:01:00.0", result.get("ModificationTimestamp").toString());
+    }
+
+    @Test
+    void testSelectPropertyDataListing() {
+
+        // Setup
+        runCommandForContent("sql/insertPropertyDataListing.sql");
+
+        // Execute
+        var result = myBatisDao.selectAllEntities("PropertyDataListing", -1, -1);
+
+        // Verify
+        assertEquals(2, result.size());
+        var item1 = result.get(0);
+        assertEquals(1L, item1.get("ListingId"));
+        assertEquals("2023-09-09", item1.get("ListingContractDate").toString());
+        assertEquals("2023-09-10 12:01:00.0", item1.get("ModificationTimestamp").toString());
+
+        var item2 = result.get(1);
+        assertEquals(2L, item2.get("ListingId"));
+        assertEquals("2023-09-11", item2.get("ListingContractDate").toString());
+        assertEquals("2023-09-12 12:02:00.0", item2.get("ModificationTimestamp").toString());
+    }
+
+    @Test
+    void testSelectSelectPropertyDataListingWithRowBounds() {
+
+        // Setup
+        runCommandForContent("sql/insertPropertyDataListing.sql");
+
+        // Execute
+        var result = myBatisDao.selectAllEntities("PropertyDataListing", 1, 1);
+
+        // Verify
+        assertEquals(1, result.size());
+        var item1 = result.get(0);
+        assertEquals(2L, item1.get("ListingId"));
+        assertEquals("2023-09-11", item1.get("ListingContractDate").toString());
+        assertEquals("2023-09-12 12:02:00.0", item1.get("ModificationTimestamp").toString());
+    }
+
+    @Test
+    void testInsertPropertyDataListing() {
+
+        // Setup
+        var request = Map.<String, Object>of(
+                "ListingId", 1,
+                "ListingContractDate", "2023-09-11",
+                "ModificationTimestamp", "2023-09-12 12:02:00.0"
+        );
+
+        // Execute
+        var item = myBatisDao.insertEntity("PropertyDataListing", "ListingId", request);
+
+        // Verify
+        assertEquals(1L, item.get("ListingId"));
+        assertEquals("2023-09-11", item.get("ListingContractDate").toString());
+        assertEquals("2023-09-12 12:02:00.0", item.get("ModificationTimestamp").toString());
+
+        var resultOpt = myBatisDao.selectEntity("PropertyDataListing", "ListingId", 1);
+        assertTrue(resultOpt.isPresent());
+        item = resultOpt.get();
+
+        // Verify
+        assertEquals(1L, item.get("ListingId"));
+        assertEquals("2023-09-11", item.get("ListingContractDate").toString());
+        assertEquals("2023-09-12 12:02:00.0", item.get("ModificationTimestamp").toString());
+    }
+
+    @Test
+    void testUpdatePropertyDataListing() {
+
+        // Setup
+        var request = Map.<String, Object>of(
+                "ListingId", 1,
+                "ListingContractDate", "2023-09-11",
+                "ModificationTimestamp", "2023-09-12 12:02:00.0"
+        );
+
+        var item = myBatisDao.insertEntity("PropertyDataListing", "ListingId", request);
+
+        request = Map.of(
+                "ListingId", 1,
+                "ListingContractDate", "2023-10-11",
+                "ModificationTimestamp", "2023-10-12 12:02:00.0"
+        );
+
+        // Execute
+        var rows = myBatisDao.updateEntity("PropertyDataListing", Map.of("ListingId", 1), request);
+        assertEquals(1, rows);
+
+        // Verify
+        var resultOpt = myBatisDao.selectEntity("PropertyDataListing", "ListingId", 1);
+        assertTrue(resultOpt.isPresent());
+        item = resultOpt.get();
+
+        // Verify
+        assertEquals(1L, item.get("ListingId"));
+        assertEquals("2023-10-11", item.get("ListingContractDate").toString());
+        assertEquals("2023-10-12 12:02:00.0", item.get("ModificationTimestamp").toString());
+    }
+
+    @Test
+    void testSelectPropertyDataListingWithRowBoundsAndColumns() {
+
+        // Setup
+        runCommandForContent("sql/insertPropertyDataListing.sql");
+
+        // Execute
+        var result = myBatisDao.selectAllEntities("PropertyDataListing", 1, 1,
+                List.of("ListingId", "ListingContractDate"));
+
+        // Verify
+        var item = result.get(0);
+        assertEquals(2L, item.get("ListingId"));
+        assertEquals("2023-09-11", item.get("ListingContractDate").toString());
+        assertEquals(2, item.size());
+    }
+
+    // PropertyDataListing stop
 }
