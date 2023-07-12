@@ -1,4 +1,4 @@
-package com.olus.olingo4.nmrls.util;
+package com.olus.olingo4.nnmrls.util;
 
 import com.google.common.io.Resources;
 

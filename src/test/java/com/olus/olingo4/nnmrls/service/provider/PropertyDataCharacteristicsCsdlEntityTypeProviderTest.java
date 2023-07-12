@@ -1,6 +1,5 @@
-package com.olus.olingo4.nmrls.service.provider;
+package com.olus.olingo4.nnmrls.service.provider;
 
-import com.olus.olingo4.nnmrls.service.provider.PropertyDataCharacteristicsCsdlEntityTypeProvider;
 import org.junit.jupiter.api.Test;
 
 import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PROP_DATA_CHARACT_NAME;

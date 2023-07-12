@@ -1,5 +1,6 @@
 package com.olus.olingo4.nnmrls.util;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
@@ -76,7 +77,8 @@ public class Olingo4Converter {
      * @param id            ID value
      * @return {@link URI}
      */
-    private static URI createId(String entitySetName, Object id) {
+    @VisibleForTesting
+    static URI createId(String entitySetName, Object id) {
         try {
             if (id instanceof String) {
                 return new URI(entitySetName + "('" + id + "')");

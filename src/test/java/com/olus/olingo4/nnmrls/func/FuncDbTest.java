@@ -1,8 +1,8 @@
-package com.olus.olingo4.nmrls.func;
+package com.olus.olingo4.nnmrls.func;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
-import com.olus.olingo4.nmrls.util.FileUtil;
+import com.olus.olingo4.nnmrls.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

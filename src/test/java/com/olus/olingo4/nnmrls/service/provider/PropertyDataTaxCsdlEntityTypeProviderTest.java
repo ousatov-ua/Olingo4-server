@@ -1,28 +1,27 @@
-package com.olus.olingo4.nmrls.service.provider;
+package com.olus.olingo4.nnmrls.service.provider;
 
-import com.olus.olingo4.nnmrls.service.provider.PropertyDataStructureCsdlEntityTypeProvider;
 import org.junit.jupiter.api.Test;
 
 import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.ET_PROP_DATA_STRUCT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for {@link PropertyDataStructureCsdlEntityTypeProvider}
+ * Unit tests for {@link PropertyDataTaxCsdlEntityTypeProvider}
  *
  * @author Oleksii Usatov
  */
-public class PropertyDataStructureCsdlEntityTypeProviderTest {
+public class PropertyDataTaxCsdlEntityTypeProviderTest {
 
     @Test
     void testCreateType() {
 
         // Execute
-        var type = PropertyDataStructureCsdlEntityTypeProvider.createType();
+        var type = PropertyDataTaxCsdlEntityTypeProvider.createType();
 
         // Verify
         assertEquals(ET_PROP_DATA_STRUCT_NAME, type.getName());
         assertEquals("Edm.Int32", type.getProperty("ListingId").getType());
-        assertEquals(18, type.getProperties().size());
+        assertEquals(2, type.getProperties().size());
         assertEquals(1, type.getKey().size());
         assertEquals("ListingId", type.getKey().get(0).getName());
     }
