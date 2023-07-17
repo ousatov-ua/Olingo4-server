@@ -51,21 +51,19 @@ sudo apt-get install libncurses5
 
 ## Generation of code
 
-<span style="color: red;font-weight: bold"> 
-Please pay attention 
-</span>
-that code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo2.nmrls.util.DdlUtil`
+```diff
+- !!! Please pay attention !!!
+```
+
+The code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo2.nmrls.util.DdlUtil`
 
 ## Mapping new fields/tables
 
-<span style="color: red;font-weight: bold"> 
-!!! Please pay attention
-</span>
- that currently all `CsdlEntityType`s have properties with the same name as database columns
+```diff
+- !!! Please pay attention !!!
+```
 
-<span style="color: red; font-weight: bold"> 
-!!!
-</span>
+Currently, all `CsdlEntityType`s have properties with the same name as database columns
 
 This is very important because all queries are generated based on those properties.
 
