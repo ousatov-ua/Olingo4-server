@@ -75,19 +75,19 @@ You'll need to implement mapper if you need custom mappings between CsdlEntityTy
 
 Optimized in db terms too. So only specific column will be fetched on DB level
 
-http://localhost:8080/.../OfficeData('1')/OfficeAddress1
+[http://localhost:8080/.../OfficeData('1')/OfficeAddress1]()
 
 ### Top and Skip
 
 Optimized in db terms too. So pagination will work on db side as well.
 
-http://localhost:8080/.../OfficeData?$top=5&$skip=1
+[http://localhost:8080/.../OfficeData?$top=5&$skip=1]()
 
 ### Select
 
 Select is optimized in db terms too. So only specific columns will be fetched on DB level.
 
-http://localhost:8080/.../OfficeData('1')?$select=OfficeAddress1,OfficeAddress2
+[http://localhost:8080/.../OfficeData('1')?$select=OfficeAddress1,OfficeAddress2]()
 
 
 ### Filter
@@ -96,50 +96,50 @@ Next current filter operations are supported
 
 #### Comparison operators
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId eq 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId eq 1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId ne 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId ne 1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId gt 2>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId gt 2]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId ge 2>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId ge 2]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId le 2>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId le 2]()
 
 [http://localhost:8080/.../PropertyDataLocation?$filter=ListingId lt 2]()
 
 #### Unary operators
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=-ListingId eq -1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=-ListingId eq -1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=not (ListingId eq 42)>
+[http://localhost:8080/.../PropertyDataLocation?$filter=not (ListingId eq 42)]()
 
 #### Method calls and strong binding unary not
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE')>
+[http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE')]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=not contains(UnparsedAddress,'ROSECREST DRIVE')>
+[http://localhost:8080/.../PropertyDataLocation?$filter=not contains(UnparsedAddress,'ROSECREST DRIVE')]()
 
 #### Arithmetic operators
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId add 1 eq 2>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId add 1 eq 2]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId sub 1 eq 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId sub 1 eq 1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId div 2 eq 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId div 2 eq 1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId mul 2 eq 6>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId mul 2 eq 6]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId mod 2 eq 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId mod 2 eq 1]()
 
 #### String literal
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=UnparsedAddress eq '000 ROSECREST DRIVE 1'>
+[http://localhost:8080/.../PropertyDataLocation?$filter=UnparsedAddress eq '000 ROSECREST DRIVE 1']()
 
 #### Boolean operators
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') or ListingId eq 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') or ListingId eq 1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 1>
+[http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 1]()
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 3>
+[http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 3]()
