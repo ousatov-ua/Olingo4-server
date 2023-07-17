@@ -106,7 +106,7 @@ Next current filter operations are supported
 
 <http://localhost:8080/.../PropertyDataLocation?$filter=ListingId le 2>
 
-<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId lt 2>
+[http://localhost:8080/.../PropertyDataLocation?$filter=ListingId lt 2]()
 
 #### Unary operators
 
