@@ -2,6 +2,7 @@ package com.olus.olingo4.nnmrls.service;
 
 import com.olus.olingo4.nnmrls.storage.Olingo4Storage;
 import org.apache.olingo.commons.api.data.ContextURL;
+import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
@@ -17,9 +18,12 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.api.uri.queryoption.SkipOption;
 import org.apache.olingo.server.api.uri.queryoption.TopOption;
+import org.apache.olingo.server.api.uri.queryoption.expression.ExpressionVisitException;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -73,6 +77,7 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
 
         // Get select options
         var selectOption = uriInfo.getSelectOption();
+        var filterOption = uriInfo.getFilterOption();
         List<String> selectedColumns = Collections.emptyList();
         if (selectOption != null) {
             selectedColumns = selectOption.getSelectItems()
@@ -90,6 +95,44 @@ public class NnmrlsEntityCollectionProcessor implements EntityCollectionProcesso
 
         // Fetch the data from backend for this requested EntitySetName // it has to be delivered as EntitySet object
         var entitySet = storage.getData(edmEntitySet, offset, limit, columns);
+
+        if (filterOption != null) {
+
+            // Apply $filter system query option
+            try {
+                List<Entity> entityList = entitySet.getEntities();
+                Iterator<Entity> entityIterator = entityList.iterator();
+
+                // Evaluate the expression for each entity
+                // If the expression is evaluated to "true", keep the entity otherwise remove it from the entityList
+                while (entityIterator.hasNext()) {
+
+                    // To evaluate the expression, create an instance of the Filter Expression Visitor and pass
+                    // the current entity to the constructor
+                    var currentEntity = entityIterator.next();
+                    var filterExpression = filterOption.getExpression();
+                    var expressionVisitor = new FilterExpressionVisitor(currentEntity);
+
+                    // Start evaluating the expression
+                    Object visitorResult = filterExpression.accept(expressionVisitor);
+
+                    // The result of the filter expression must be of type Edm.Boolean
+                    if (visitorResult instanceof Boolean) {
+                        if (!Boolean.TRUE.equals(visitorResult)) {
+
+                            // The expression evaluated to false (or null), so we have to remove the currentEntity from entityList
+                            entityIterator.remove();
+                        }
+                    } else {
+                        throw new ODataApplicationException("A filter expression must evaluate to type Edm.Boolean",
+                                HttpStatusCode.BAD_REQUEST.getStatusCode(), Locale.ENGLISH);
+                    }
+                }
+            } catch (ExpressionVisitException e) {
+                throw new ODataApplicationException("Exception in filter evaluation",
+                        HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH);
+            }
+        }
 
         // Create a serializer based on the requested format (json)
         var serializer = odata.createSerializer(responseFormat);

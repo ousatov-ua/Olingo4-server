@@ -28,6 +28,9 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.*;
  * @author Oleksii Usatov
  */
 public class Olingo4Storage {
+    private static final boolean ENABLE_UPDATE_ENTITY = false;
+    private static final boolean ENABLE_CREATE_ENTITY = false;
+
     private final MyBatisDao mybatisDao;
 
     public Olingo4Storage() {
@@ -148,6 +151,9 @@ public class Olingo4Storage {
      */
     public Entity createEntityData(EdmEntitySet edmEntitySet,
                                    Entity entityToCreate) throws ODataApplicationException {
+        if (!ENABLE_CREATE_ENTITY) {
+            throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+        }
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // We have only one key!
@@ -185,6 +191,9 @@ public class Olingo4Storage {
                                  @SuppressWarnings("unused") List<UriParameter> keyPredicates,
                                  Entity entity,
                                  HttpMethod httpMethod) throws ODataApplicationException {
+        if (!ENABLE_UPDATE_ENTITY) {
+            throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+        }
         var edmEntityType = edmEntitySet.getEntityType();
 
         // Gather all keys params

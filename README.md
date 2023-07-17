@@ -47,6 +47,99 @@ sudo apt-get install libncurses5
 ```
 
 ## Generation of code
-Please pay attention that code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo4.nmrls.util.DdlUtil`.
+Please pay attention that code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo4.nmrls.util.DdlUtil`
 
-The same for INSERT query MyBatis - use `com.olus.olingo4.nmrls.util.DdlUtil` to generate it! 
+## Mapping new fields/tables
+
+!!!Please pay attention that currently all `CsdlEntityType`s have properties with the same name as database columns!!!
+
+This is very important because all queries are generated based on those properties.
+
+You'll need to implement mapper if you need custom mappings between CsdlEntityType and Database columns
+
+### New table
+
+1) Add appropriate ET_$name_NAME, ET_$name_FQN, ES_$name_NAME in `NnmrlsEdmProvider`
+2) Get DDL of your new table (just use generate SQL tool if you have just a table without its creation script)
+3) Use `com.olus.olingo4.nmrls.util.DdlUtil` to generate java code for all columns
+4) Create CsdlEntityTypeProvider - refer to existing ones as example. Put generated java code inside it.
+5) Put call to your CsdlEntityProvider from `NnmrlsEdmProvider.getCsdlEntityType`
+
+### Add fields to a table
+1) Update appropriate CsdlEntityTypeProvider.
+
+
+## Olingo4 operations
+
+### Get one property only
+
+Optimized in db terms too.
+
+http://localhost:8080/.../OfficeData('1')/OfficeAddress1
+
+### Top and Skip
+
+Optimized in db terms too.
+
+http://localhost:8080/.../OfficeData?$top=5&$skip=1
+
+### Select
+
+Select is optimized in db terms too.
+
+http://localhost:8080/.../OfficeData('1')?$select=OfficeAddress1,OfficeAddress2
+
+
+### Filter
+
+Next current filter operations are supported
+
+#### Comparison operators
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId eq 1>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId ne 1>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId gt 2>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId ge 2>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId le 2>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId lt 2>
+
+#### Unary operators
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=-ListingId eq -1>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=not (ListingId eq 42)>
+
+#### Method calls and strong binding unary not
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE')>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=not contains(UnparsedAddress,'ROSECREST DRIVE')>
+
+#### Arithmetic operators
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId add 1 eq 2>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId sub 1 eq 1>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId div 2 eq 1>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId mul 2 eq 6>
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=ListingId mod 2 eq 1>
+
+#### String literal
+
+<http://localhost:8080/.../PropertyDataLocation?$filter=UnparsedAddress eq '000 ROSECREST DRIVE 1'>
+
+#### Boolean operators
+
+<http://localhost:8080/.../Products?$filter=contains(Name,'Ergo') or ListingId eq 1>
+
+<http://localhost:8080/.../Products?$filter=contains(Name,'Ergo') and ListingId eq 1>
+
+<http://localhost:8080/.../Products?$filter=contains(Name,'Ergo') and ListingId eq 3>
