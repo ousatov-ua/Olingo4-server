@@ -5,10 +5,11 @@
 Please edit `/conf/context.xml` in Tomcat home directory and add Database pool:
 
 ```xml
-    <Resource name="jdbc/nnmrlsDb" auth="Container" type="javax.sql.DataSource"
-               maxTotal="25" maxIdle="5" maxWaitMillis="5000"
-               username="user" password="password" driverClassName="com.mysql.cj.jdbc.Driver"
-               url="jdbc:mysql://server:3306/schema"/>
+
+<Resource name="jdbc/nnmrlsDb" auth="Container" type="javax.sql.DataSource"
+          maxTotal="25" maxIdle="5" maxWaitMillis="5000"
+          username="user" password="password" driverClassName="com.mysql.cj.jdbc.Driver"
+          url="jdbc:mysql://server:3306/schema"/>
 
 ```
 
@@ -20,6 +21,7 @@ Next is added to catalina.sh to have tomcat running on IP V4:
 JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true "
 
 ```
+
 right before sentence:
 
 ```shell
@@ -29,11 +31,12 @@ JAVA_OPTS="$JAVA_OPTS $JSSE_OPTS"
 Also, in `server.xml` connector is configured to have next attributes:
 
 ```xml
- <Connector port="8080"
-            
-    address="0.0.0.0"
-    useIPVHosts="true"/>        
-    
+
+<Connector port="8080"
+
+           address="0.0.0.0"
+           useIPVHosts="true"/>
+
 ```
 
 ## Functional tests
@@ -47,11 +50,22 @@ sudo apt-get install libncurses5
 ```
 
 ## Generation of code
-Please pay attention that code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo4.nmrls.util.DdlUtil`
+
+<span style="color: red;font-weight: bold"> 
+Please pay attention 
+</span>
+that code for `*CsdlEntityTypeProvider` is generated using `com.olus.olingo2.nmrls.util.DdlUtil`
 
 ## Mapping new fields/tables
 
-!!!Please pay attention that currently all `CsdlEntityType`s have properties with the same name as database columns!!!
+<span style="color: red;font-weight: bold"> 
+!!! Please pay attention
+</span>
+ that currently all `CsdlEntityType`s have properties with the same name as database columns
+
+<span style="color: red; font-weight: bold"> 
+!!!
+</span>
 
 This is very important because all queries are generated based on those properties.
 
@@ -66,8 +80,8 @@ You'll need to implement mapper if you need custom mappings between CsdlEntityTy
 5) Put call to your CsdlEntityProvider from `NnmrlsEdmProvider.getCsdlEntityType`
 
 ### Add fields to a table
-1) Update appropriate CsdlEntityTypeProvider.
 
+1) Update appropriate CsdlEntityTypeProvider.
 
 ## Olingo4 operations
 
@@ -88,7 +102,6 @@ Optimized in db terms too. So pagination will work on db side as well.
 Select is optimized in db terms too. So only specific columns will be fetched on DB level.
 
 [http://localhost:8080/.../OfficeData('1')?$select=OfficeAddress1,OfficeAddress2]()
-
 
 ### Filter
 
