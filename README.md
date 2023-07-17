@@ -72,10 +72,11 @@ You'll need to implement mapper if you need custom mappings between CsdlEntityTy
 ### New table
 
 1) Add appropriate ET_$name_NAME, ET_$name_FQN, ES_$name_NAME in `NnmrlsEdmProvider`
-2) Get DDL of your new table (just use generate SQL tool if you have just a table without its creation script)
-3) Use `com.olus.olingo4.nmrls.util.DdlUtil` to generate java code for all columns
-4) Create CsdlEntityTypeProvider - refer to existing ones as example. Put generated java code inside it.
-5) Put call to your CsdlEntityProvider from `NnmrlsEdmProvider.getCsdlEntityType`
+2) Put those in `ALL_ET`, `ALL_FQN`, `ALL_ES`
+3) Get DDL of your new table (just use generate SQL tool if you have just a table without its creation script)
+4) Use `com.olus.olingo4.nmrls.util.DdlUtil` to generate java code for all columns
+5) Create CsdlEntityTypeProvider - refer to existing ones as example. Put generated java code inside it.
+6) Put call to your CsdlEntityProvider from `NnmrlsEdmProvider.getCsdlEntityType`
 
 ### Add fields to a table
 
