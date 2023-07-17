@@ -294,20 +294,20 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     }
 
     @Override
-    public Object visitTypeLiteral(EdmType type) throws ExpressionVisitException, ODataApplicationException {
+    public Object visitTypeLiteral(EdmType type) throws ODataApplicationException {
         throw new ODataApplicationException("Type literals are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
 
     @Override
-    public Object visitAlias(String aliasName) throws ExpressionVisitException, ODataApplicationException {
+    public Object visitAlias(String aliasName) throws ODataApplicationException {
         throw new ODataApplicationException("Aliases are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
 
     @Override
     public Object visitEnum(EdmEnumType type, List<String> enumValues)
-            throws ExpressionVisitException, ODataApplicationException {
+            throws ODataApplicationException {
         throw new ODataApplicationException("Enums are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
