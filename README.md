@@ -73,19 +73,19 @@ You'll need to implement mapper if you need custom mappings between CsdlEntityTy
 
 ### Get one property only
 
-Optimized in db terms too.
+Optimized in db terms too. So only specific column will be fetched on DB level
 
 http://localhost:8080/.../OfficeData('1')/OfficeAddress1
 
 ### Top and Skip
 
-Optimized in db terms too.
+Optimized in db terms too. So pagination will work on db side as well.
 
 http://localhost:8080/.../OfficeData?$top=5&$skip=1
 
 ### Select
 
-Select is optimized in db terms too.
+Select is optimized in db terms too. So only specific columns will be fetched on DB level.
 
 http://localhost:8080/.../OfficeData('1')?$select=OfficeAddress1,OfficeAddress2
 
