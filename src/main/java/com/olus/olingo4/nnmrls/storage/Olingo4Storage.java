@@ -152,7 +152,7 @@ public class Olingo4Storage {
     public Entity createEntityData(EdmEntitySet edmEntitySet,
                                    Entity entityToCreate) throws ODataApplicationException {
         if (!ENABLE_CREATE_ENTITY) {
-            throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+            throw new ODataApplicationException("Creation of entities is disabled.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
         }
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
@@ -192,7 +192,7 @@ public class Olingo4Storage {
                                  Entity entity,
                                  HttpMethod httpMethod) throws ODataApplicationException {
         if (!ENABLE_UPDATE_ENTITY) {
-            throw new ODataApplicationException("Not supported.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
+            throw new ODataApplicationException("Modification of entities is disabled", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
         }
         var edmEntityType = edmEntitySet.getEntityType();
 
