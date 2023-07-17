@@ -138,8 +138,8 @@ Next current filter operations are supported
 
 #### Boolean operators
 
-<http://localhost:8080/.../Products?$filter=contains(Name,'Ergo') or ListingId eq 1>
+<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') or ListingId eq 1>
 
-<http://localhost:8080/.../Products?$filter=contains(Name,'Ergo') and ListingId eq 1>
+<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 1>
 
-<http://localhost:8080/.../Products?$filter=contains(Name,'Ergo') and ListingId eq 3>
+<http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 3>
