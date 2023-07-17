@@ -33,6 +33,8 @@ import java.util.Locale;
 
 /**
  * Visitor to use filter expressions
+ *
+ * @author Oleksii Usatov
  */
 @Slf4j
 public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
@@ -45,13 +47,11 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
 
     @Override
     public Object visitMember(final Member member) throws ExpressionVisitException, ODataApplicationException {
-        // We have faith that the java type of Edm.Int32 is Integer
-
         final List<UriResource> uriResourceParts = member.getResourcePath().getUriResourceParts();
 
-        // Make sure that the resource path of the property contains only a single segment and a primitive property
-        // has been addressed. We can be sure, that the property exists because the UriParser checks if the
-        // property has been defined in service metadata document.
+        /* Make sure that the resource path of the property contains only a single segment and a primitive property
+          has been addressed. We can be sure, that the property exists because the UriParser checks if the
+          property has been defined in service metadata document. */
 
         if (uriResourceParts.size() == 1 && uriResourceParts.get(0) instanceof UriResourcePrimitiveProperty) {
             UriResourcePrimitiveProperty uriResourceProperty = (UriResourcePrimitiveProperty) uriResourceParts.get(0);
@@ -110,8 +110,9 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     @Override
     public Object visitUnaryOperator(UnaryOperatorKind operator, Object operand)
             throws ODataApplicationException {
-        // OData allows two different unary operators. We have to take care, that the type of the operand fits to
-        // operand
+
+        /* OData allows two different unary operators. We have to take care, that the type of the operand fits to
+        operand */
 
         if (operator == UnaryOperatorKind.NOT && operand instanceof Boolean) {
 
@@ -211,8 +212,6 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
                 throw new ODataApplicationException("Class " + left.getClass().getCanonicalName() + " not expected",
                         HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH);
             }
-
-
         } else {
             log.error("Comparison needs two equal types, left={}, right={}", left.getClass(), right.getClass());
             throw new ODataApplicationException("Comparison needs two equal types",
@@ -326,14 +325,14 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     @Override
     public Object visitLambdaExpression(String lambdaFunction, String lambdaVariable, Expression expression)
             throws ExpressionVisitException, ODataApplicationException {
-        throw new ODataApplicationException("Lamdba expressions are not implemented",
+        throw new ODataApplicationException("Lambda expressions are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
 
     @Override
     public Object visitLambdaReference(String variableName)
             throws ExpressionVisitException, ODataApplicationException {
-        throw new ODataApplicationException("Lamdba references are not implemented",
+        throw new ODataApplicationException("Lambda references are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
 }
