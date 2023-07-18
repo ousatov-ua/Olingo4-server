@@ -148,7 +148,7 @@
                             <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                             <excludes>
-                                <exclude>**/Application.*</exclude>
+                                <exclude>**/NmrlsServlet.*</exclude>
                             </excludes>
                         </configuration>
                     </execution>
