@@ -1,5 +1,6 @@
 package com.olus.olingo4.nnmrls.storage;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.olus.olingo4.nnmrls.dao.MyBatisDao;
 import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
 import com.olus.olingo4.nnmrls.util.Olingo4Converter;
@@ -28,8 +29,10 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.*;
  * @author Oleksii Usatov
  */
 public class Olingo4Storage {
-    private static final boolean ENABLE_UPDATE_ENTITY = false;
-    private static final boolean ENABLE_CREATE_ENTITY = false;
+    @VisibleForTesting
+    static boolean enableUpdateEntity = false;
+    @VisibleForTesting
+    static boolean enableCreateEntity = false;
 
     private final MyBatisDao mybatisDao;
 
@@ -44,9 +47,10 @@ public class Olingo4Storage {
      * @param id original Id received from request
      * @return Key without quotes
      */
-    private static String getKeyValue(String id) {
+    @VisibleForTesting
+    static String getKeyValue(String id) {
         var key = id;
-        if (id.length() >= 3) {
+        if (id != null && id.length() >= 3) {
             key = id.substring(1, id.length() - 1);
         }
         return key;
@@ -59,8 +63,9 @@ public class Olingo4Storage {
      * @param propertyName  property name
      * @return true if key otherwise false
      */
-    private static boolean isKey(EdmEntityType edmEntityType,
-                                 String propertyName) {
+    @VisibleForTesting
+    static boolean isKey(EdmEntityType edmEntityType,
+                         String propertyName) {
         List<EdmKeyPropertyRef> keyPropertyRefs = edmEntityType.getKeyPropertyRefs();
         for (EdmKeyPropertyRef propRef : keyPropertyRefs) {
             String keyPropertyName = propRef.getName();
@@ -79,9 +84,9 @@ public class Olingo4Storage {
      */
     public EntityCollection getData(EdmEntitySet edmEntitySet,
                                     int offset,
-                                    int limit, List<String> columns) throws ODataApplicationException {
+                                    int limit, List<String> columns) {
 
-        var pragentsCollection = new EntityCollection();
+        var entityCollection = new EntityCollection();
 
         // Check for which EdmEntitySet the data is requested
         switch (edmEntitySet.getName()) {
@@ -104,7 +109,7 @@ public class Olingo4Storage {
                         mybatisDao.selectAllEntities(NnmrlsEdmProvider.ES_TO_ET.get(edmEntitySet.getName()),
                                 offset, limit, columns));
         }
-        return pragentsCollection;
+        return entityCollection;
     }
 
     /**
@@ -151,7 +156,7 @@ public class Olingo4Storage {
      */
     public Entity createEntityData(EdmEntitySet edmEntitySet,
                                    Entity entityToCreate) throws ODataApplicationException {
-        if (!ENABLE_CREATE_ENTITY) {
+        if (!enableCreateEntity) {
             throw new ODataApplicationException("Creation of entities is disabled.", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
         }
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
@@ -191,7 +196,7 @@ public class Olingo4Storage {
                                  @SuppressWarnings("unused") List<UriParameter> keyPredicates,
                                  Entity entity,
                                  HttpMethod httpMethod) throws ODataApplicationException {
-        if (!ENABLE_UPDATE_ENTITY) {
+        if (!enableUpdateEntity) {
             throw new ODataApplicationException("Modification of entities is disabled", HttpStatusCode.NOT_ACCEPTABLE.getStatusCode(), Locale.ROOT);
         }
         var edmEntityType = edmEntitySet.getEntityType();

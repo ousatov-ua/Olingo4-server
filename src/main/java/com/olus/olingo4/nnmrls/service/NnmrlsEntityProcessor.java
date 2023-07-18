@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
  *
  * @author Oleksii Usatov
  */
-public class NmrlsEntityProcessor implements EntityProcessor {
+public class NnmrlsEntityProcessor implements EntityProcessor {
     private final Olingo4Storage storage;
     private OData odata;
     private ServiceMetadata serviceMetadata;
 
-    public NmrlsEntityProcessor(Olingo4Storage storage) {
+    public NnmrlsEntityProcessor(Olingo4Storage storage) {
         this.storage = storage;
     }
 

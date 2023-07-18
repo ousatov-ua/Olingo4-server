@@ -1,7 +1,7 @@
 package com.olus.olingo4.nnmrls.web;
 
-import com.olus.olingo4.nnmrls.service.NmrlsEntityPrimitiveProcessor;
-import com.olus.olingo4.nnmrls.service.NmrlsEntityProcessor;
+import com.olus.olingo4.nnmrls.service.NnmrlsEntityPrimitiveProcessor;
+import com.olus.olingo4.nnmrls.service.NnmrlsEntityProcessor;
 import com.olus.olingo4.nnmrls.service.NnmrlsEntityCollectionProcessor;
 import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
 import com.olus.olingo4.nnmrls.storage.Olingo4Storage;
@@ -43,8 +43,8 @@ public class NmrlsServlet extends HttpServlet {
             var edm = odata.createServiceMetadata(new NnmrlsEdmProvider(), new ArrayList<>());
             var handler = odata.createHandler(edm);
             handler.register(new NnmrlsEntityCollectionProcessor(storage));
-            handler.register(new NmrlsEntityProcessor(storage));
-            handler.register(new NmrlsEntityPrimitiveProcessor(storage));
+            handler.register(new NnmrlsEntityProcessor(storage));
+            handler.register(new NnmrlsEntityPrimitiveProcessor(storage));
 
             // Let the handler do the work
             handler.process(req, resp);

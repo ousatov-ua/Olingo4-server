@@ -197,7 +197,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     private Object evaluateComparisonOperation(BinaryOperatorKind operator, Object left, Object right)
             throws ODataApplicationException {
 
-        // All types in our tutorial supports all logical operations, but we have to make sure that the types are equals
+        // All types supports all logical operations, but we have to make sure that the types are equals
         int result;
         if (left instanceof Number && right instanceof Number) {
             result = new BigDecimal(left.toString()).compareTo((BigDecimal) right);
@@ -324,14 +324,14 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
 
     @Override
     public Object visitLambdaExpression(String lambdaFunction, String lambdaVariable, Expression expression)
-            throws ExpressionVisitException, ODataApplicationException {
+            throws ODataApplicationException {
         throw new ODataApplicationException("Lambda expressions are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
 
     @Override
     public Object visitLambdaReference(String variableName)
-            throws ExpressionVisitException, ODataApplicationException {
+            throws ODataApplicationException {
         throw new ODataApplicationException("Lambda references are not implemented",
                 HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }

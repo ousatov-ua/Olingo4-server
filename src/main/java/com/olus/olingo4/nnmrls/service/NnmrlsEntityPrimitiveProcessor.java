@@ -27,13 +27,13 @@ import java.util.Locale;
  *
  * @author Oleksii Usatov
  */
-public class NmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
+public class NnmrlsEntityPrimitiveProcessor implements PrimitiveProcessor {
 
     private final Olingo4Storage storage;
     private OData odata;
     private ServiceMetadata serviceMetadata;
 
-    public NmrlsEntityPrimitiveProcessor(Olingo4Storage storage) {
+    public NnmrlsEntityPrimitiveProcessor(Olingo4Storage storage) {
         this.storage = storage;
     }
 
