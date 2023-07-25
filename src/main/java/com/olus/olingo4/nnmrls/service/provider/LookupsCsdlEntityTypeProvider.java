@@ -25,11 +25,11 @@ public class LookupsCsdlEntityTypeProvider {
         var entityType = new CsdlEntityType();
         entityType.setProperties(Arrays.asList(property_0, property_1, property_2));
 
-        // create CsdlPropertyRef for Key element
+        // Create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
         propertyRef.setName("LookupIds");
 
-        // configure EntityType
+        // Configure EntityType
         entityType.setName(ET_LOOKUPS_NAME);
         entityType.setKey(Collections.singletonList(propertyRef));
         return entityType;

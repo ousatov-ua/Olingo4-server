@@ -33,7 +33,6 @@ import static com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider.*;
 @Slf4j
 public class MyBatisDao implements IDao {
     private static final int DEFAULT_ROW_LIMIT = 30;
-
     private final SqlSessionFactory sqlSessionFactory;
     private final Map<String, Collection<SqlColumn<Object>>> tableToAllColumns = new HashMap<>();
 
@@ -67,6 +66,13 @@ public class MyBatisDao implements IDao {
         return limit;
     }
 
+    /**
+     * Get mapper (MyBatis)
+     *
+     * @param tableName tableName
+     * @param session   current {@link SqlSession}
+     * @return {@link Mapper}
+     */
     private static Mapper getMapper(String tableName, SqlSession session) {
         switch (tableName) {
             case ET_LOOKUPS_NAME:
@@ -86,8 +92,31 @@ public class MyBatisDao implements IDao {
         return null;
     }
 
+    /**
+     * We need to add '`' if column contains dots
+     *
+     * @param columnName column name
+     * @return formatted column name
+     */
     private static String columnName(String columnName) {
         return columnName.contains(".") ? "`" + columnName + "`" : columnName;
+    }
+
+    /**
+     * Convert list of string columns to type {@link SqlColumn}
+     *
+     * @param table       {@link SqlTable}
+     * @param columnNames list of columns
+     * @return array of {@link SqlColumn}
+     */
+    private SqlColumn<?>[] getSqlColumns(SqlTable table, List<String> columnNames) {
+        if (columnNames.isEmpty()) {
+            return tableToAllColumns.get(table.tableNameAtRuntime()).toArray(new SqlColumn[0]);
+        } else {
+            return columnNames.stream()
+                    .map(col -> SqlColumn.of(col, table))
+                    .toArray(SqlColumn[]::new);
+        }
     }
 
     /**
@@ -131,24 +160,7 @@ public class MyBatisDao implements IDao {
             log.error("Could not select objects!", e);
             throw new DaoException("Could not select objects!");
         }
-        return List.of();
-    }
-
-    /**
-     * Convert list of string columns to type {@link SqlColumn}
-     *
-     * @param table       {@link SqlTable}
-     * @param columnNames list of columns
-     * @return array of {@link SqlColumn}
-     */
-    private SqlColumn<?>[] getSqlColumns(SqlTable table, List<String> columnNames) {
-        if (columnNames.isEmpty()) {
-            return tableToAllColumns.get(table.tableNameAtRuntime()).toArray(new SqlColumn[0]);
-        } else {
-            return columnNames.stream()
-                    .map(col -> SqlColumn.of(col, table))
-                    .toArray(SqlColumn[]::new);
-        }
+        return Collections.emptyList();
     }
 
     /**

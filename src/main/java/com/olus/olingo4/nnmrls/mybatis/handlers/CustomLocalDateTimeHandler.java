@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 /**
  * Custom type handler for {@link LocalDateTime}
- * It is needed to be in sync with Olingo4
+ * It is needed to be in sync with Olingo4 format
  *
  * @author Oleksii Usatov
  */
