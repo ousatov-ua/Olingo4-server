@@ -149,6 +149,8 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                             <excludes>
                                 <exclude>**/NmrlsServlet.*</exclude>
+                                <exclude>**/exception/*</exclude>
+                                <exclude>**/CustomLocalDateTimeHandler*.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>

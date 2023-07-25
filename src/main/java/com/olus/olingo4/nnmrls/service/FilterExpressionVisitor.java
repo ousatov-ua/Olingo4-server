@@ -28,6 +28,7 @@ import org.apache.olingo.server.api.uri.queryoption.expression.MethodKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.UnaryOperatorKind;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +47,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     }
 
     @Override
-    public Object visitMember(final Member member) throws ExpressionVisitException, ODataApplicationException {
+    public Object visitMember(final Member member) throws ODataApplicationException {
         final List<UriResource> uriResourceParts = member.getResourcePath().getUriResourceParts();
 
         /* Make sure that the resource path of the property contains only a single segment and a primitive property
@@ -251,7 +252,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
             } else if (operator == BinaryOperatorKind.MUL) {
                 return valueLeft.multiply(valueRight);
             } else if (operator == BinaryOperatorKind.DIV) {
-                return valueLeft.divide(valueRight);
+                return valueLeft.divide(valueRight, RoundingMode.UNNECESSARY);
             } else {
 
                 // BinaryOperatorKind,MOD
@@ -313,8 +314,9 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     }
 
     @Override
-    public Object visitBinaryOperator(BinaryOperatorKind operator, Object left, List<Object> right) throws ExpressionVisitException, ODataApplicationException {
-        return null;
+    public Object visitBinaryOperator(BinaryOperatorKind operator, Object left, List<Object> right) throws ODataApplicationException {
+        throw new ODataApplicationException("Binary operations for list are not implemented",
+                HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
 
     @Override

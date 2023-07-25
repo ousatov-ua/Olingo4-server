@@ -1,8 +1,11 @@
 package com.olus.olingo4.nnmrls.service;
 
 import org.apache.olingo.commons.api.data.Entity;
+import org.apache.olingo.commons.api.data.Property;
+import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.edm.EdmEnumType;
+import org.apache.olingo.commons.api.edm.EdmProperty;
 import org.apache.olingo.commons.api.edm.EdmType;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmByte;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDecimal;
@@ -14,8 +17,13 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmSByte;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.server.api.ODataApplicationException;
+import org.apache.olingo.server.api.uri.UriInfoResource;
+import org.apache.olingo.server.api.uri.UriResource;
+import org.apache.olingo.server.api.uri.UriResourcePrimitiveProperty;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
+import org.apache.olingo.server.api.uri.queryoption.expression.Member;
+import org.apache.olingo.server.api.uri.queryoption.expression.MethodKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.UnaryOperatorKind;
 import org.apache.olingo.server.core.uri.queryoption.expression.LiteralImpl;
 import org.junit.jupiter.api.Test;
@@ -32,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit test for {@link FilterExpressionVisitor}
@@ -93,6 +102,32 @@ class FilterExpressionVisitorTest {
     }
 
     @Test
+    void testVisitLiteralUnsupported() {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+        var literal = new LiteralImpl("'1'", new EdmSingle());
+
+        // Execute && Verify
+        var result = assertThrows(ODataApplicationException.class, () -> visitor.visitLiteral(literal));
+        assertEquals("Could not convert specified literal type=Edm.Single", result.getMessage());
+    }
+
+    @Test
+    void testVisitLiteralParseError() {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+        var literal = new LiteralImpl("1.2l", new EdmDecimal());
+
+        // Execute && Verify
+        var result = assertThrows(ODataApplicationException.class, () -> visitor.visitLiteral(literal));
+        assertEquals("Could not convert specified literal type=Edm.Decimal", result.getMessage());
+    }
+
+    @Test
     void testVisitUnaryOperatorBoolean() throws ODataApplicationException {
 
         // Setup
@@ -140,7 +175,6 @@ class FilterExpressionVisitorTest {
         var entity = new Entity();
         var visitor = new FilterExpressionVisitor(entity);
 
-
         // Execute && Verify
         assertEquals(new BigDecimal(result), visitor.visitBinaryOperator(BinaryOperatorKind.valueOf(operator),
                 Long.valueOf(left), new BigDecimal(right)));
@@ -156,10 +190,48 @@ class FilterExpressionVisitorTest {
         var entity = new Entity();
         var visitor = new FilterExpressionVisitor(entity);
 
-
         // Execute && Verify
         assertEquals(Boolean.valueOf(result), visitor.visitBinaryOperator(BinaryOperatorKind.valueOf(operator),
                 new BigDecimal(left), new BigDecimal(right)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"EQ,abc,abcd,false", "EQ,abc,abc,true"})
+    void testVisitBinaryComparisonOperatorForString(String operator, String left, String right, String result) throws ODataApplicationException {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        // Execute && Verify
+        assertEquals(Boolean.valueOf(result), visitor.visitBinaryOperator(BinaryOperatorKind.valueOf(operator),
+                left, right));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"EQ,true,false,false", "EQ,true,true,true"})
+    void testVisitBinaryComparisonOperatorForBoolean(String operator, String left, String right, String result) throws ODataApplicationException {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        // Execute && Verify
+        assertEquals(Boolean.valueOf(result), visitor.visitBinaryOperator(BinaryOperatorKind.valueOf(operator),
+                Boolean.valueOf(left), Boolean.valueOf(right)));
+    }
+
+    @Test
+    void testVisitBinaryComparisonOperatorForWrongTypes() {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        // Execute && Verify
+        var thrown = assertThrows(ODataApplicationException.class, () -> visitor.visitBinaryOperator(BinaryOperatorKind.EQ,
+                true, "str"));
+        assertEquals("Comparison needs two equal types", thrown.getMessage());
     }
 
     @ParameterizedTest
@@ -169,7 +241,6 @@ class FilterExpressionVisitorTest {
         // Setup
         var entity = new Entity();
         var visitor = new FilterExpressionVisitor(entity);
-
 
         // Execute && Verify
         assertEquals(Boolean.valueOf(result), visitor.visitBinaryOperator(BinaryOperatorKind.valueOf(operator),
@@ -247,5 +318,111 @@ class FilterExpressionVisitorTest {
                 () -> visitor.visitLambdaReference(""),
                 "Expected doThing() to throw, but it didn't");
         assertEquals("Lambda references are not implemented", thrown.getMessage());
+    }
+
+    @Test
+    void testVisitMethodCallFalse() throws ODataApplicationException {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        var parameters = List.<Object>of("parameter1", "parameter2");
+
+        // Execute
+        assertFalse((Boolean) visitor.visitMethodCall(MethodKind.CONTAINS, parameters));
+    }
+
+    @Test
+    void testVisitMethodCallTrue() throws ODataApplicationException {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        var parameters = List.<Object>of("parameter1", "parameter");
+
+        // Execute && Verify
+        assertTrue((Boolean) visitor.visitMethodCall(MethodKind.CONTAINS, parameters));
+    }
+
+    @Test
+    void testVisitMethodCallException() {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        var parameters = List.<Object>of("parameter1", 1);
+
+        // Execute && Verify
+        var thrown = assertThrows(ODataApplicationException.class,
+                () -> visitor.visitMethodCall(MethodKind.CONTAINS, parameters),
+                "Contains needs two parametes of type Edm.String");
+        assertEquals("Contains needs two parametes of type Edm.String", thrown.getMessage());
+    }
+
+    @Test
+    void testVisitMethodCallNotImplemented() {
+
+        // Setup
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        var parameters = List.<Object>of("parameter1", "parameter2");
+
+        // Execute && Verify
+        var thrown = assertThrows(ODataApplicationException.class,
+                () -> visitor.visitMethodCall(MethodKind.CEILING, parameters),
+                "Method call ceiling not implemented");
+        assertEquals("Method call ceiling not implemented", thrown.getMessage());
+    }
+
+    @Test
+    void testVisitMember() throws ODataApplicationException {
+
+        // Setup
+        var member = mock(Member.class);
+        var resourcePath = mock(UriInfoResource.class);
+        var uriResourcePrimitiveProperty = mock(UriResourcePrimitiveProperty.class);
+        var uriResourceParts = List.<UriResource>of(uriResourcePrimitiveProperty);
+
+        when(resourcePath.getUriResourceParts()).thenReturn(uriResourceParts);
+        when(member.getResourcePath()).thenReturn(resourcePath);
+
+        var edmProperty = mock(EdmProperty.class);
+        when(edmProperty.getName()).thenReturn("name");
+        when(uriResourcePrimitiveProperty.getProperty()).thenReturn(edmProperty);
+        var entity = new Entity();
+        var property = new Property();
+        property.setName("name");
+        property.setValue(ValueType.PRIMITIVE, 1);
+        entity.addProperty(property);
+
+        var visitor = new FilterExpressionVisitor(entity);
+
+        // Execute && Verify
+        assertEquals(1, visitor.visitMember(member));
+    }
+
+
+    @Test
+    void testVisitMemberNotPrimitive() throws ODataApplicationException {
+
+        // Setup
+        var member = mock(Member.class);
+        var resourcePath = mock(UriInfoResource.class);
+        var uriResourcePrimitiveProperty = mock(UriResource.class);
+        var uriResourceParts = List.of(uriResourcePrimitiveProperty);
+
+        when(resourcePath.getUriResourceParts()).thenReturn(uriResourceParts);
+        when(member.getResourcePath()).thenReturn(resourcePath);
+
+        var entity = new Entity();
+        var visitor = new FilterExpressionVisitor(entity);
+
+        // Execute && Verify
+        var thrown = assertThrows(ODataApplicationException.class, () -> visitor.visitMember(member));
+        assertEquals("Only primitive properties are implemented in filter expressions", thrown.getMessage());
     }
 }

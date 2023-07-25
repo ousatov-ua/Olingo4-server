@@ -1,5 +1,6 @@
 package com.olus.olingo4.nnmrls.service.provider;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlAbstractEdmProvider;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
@@ -131,11 +132,13 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
      * Mapping ET to ES
      */
     public static final Map<String, String> ET_TO_ES;
+
     static {
         ET_TO_ES = IntStream.range(0, ALL_ET.size())
                 .mapToObj(i -> new AbstractMap.SimpleEntry<>(ALL_ET.get(i), ALL_ES.get(i)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
     /**
      * Cache for CsdlEntityType
      */
@@ -148,7 +151,8 @@ public class NnmrlsEdmProvider extends CsdlAbstractEdmProvider {
      * @param type type
      * @return {@link CsdlEntityType}
      */
-    private static CsdlEntitySet createCsdlEntitySet(String name, FullQualifiedName type) {
+    @VisibleForTesting
+    static CsdlEntitySet createCsdlEntitySet(String name, FullQualifiedName type) {
         CsdlEntitySet entitySet = new CsdlEntitySet();
         entitySet.setName(name);
         entitySet.setType(type);

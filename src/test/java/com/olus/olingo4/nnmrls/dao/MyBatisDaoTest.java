@@ -3,6 +3,7 @@ package com.olus.olingo4.nnmrls.dao;
 import com.olus.olingo4.nnmrls.func.FuncDbTest;
 import com.olus.olingo4.nnmrls.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,11 @@ class MyBatisDaoTest extends FuncDbTest {
 
     @BeforeEach
     void clearData() throws IOException {
+        runCommand(FileUtil.getFileContent("sql/clearAll.sql"));
+    }
+
+    @AfterEach
+    void afterEach() throws IOException {
         runCommand(FileUtil.getFileContent("sql/clearAll.sql"));
     }
 

@@ -1,8 +1,8 @@
 package com.olus.olingo4.nnmrls.web;
 
+import com.olus.olingo4.nnmrls.service.NnmrlsEntityCollectionProcessor;
 import com.olus.olingo4.nnmrls.service.NnmrlsEntityPrimitiveProcessor;
 import com.olus.olingo4.nnmrls.service.NnmrlsEntityProcessor;
-import com.olus.olingo4.nnmrls.service.NnmrlsEntityCollectionProcessor;
 import com.olus.olingo4.nnmrls.service.provider.NnmrlsEdmProvider;
 import com.olus.olingo4.nnmrls.storage.Olingo4Storage;
 import lombok.extern.slf4j.Slf4j;

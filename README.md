@@ -43,10 +43,17 @@ Also, in `server.xml` connector is configured to have next attributes:
 
 Currently, we are using embedded DB. It needs ncurses lib installed (maybe)
 
-For Ubuntu:
+For Ubuntu@22.04.2:
 
 ```shell
 sudo apt-get install libncurses5
+```
+
+For Fedora@38:
+
+```shell
+sudo dnf install libnsl
+sudo dnf install ncurses-compat-libs
 ```
 
 ## Test coverage
