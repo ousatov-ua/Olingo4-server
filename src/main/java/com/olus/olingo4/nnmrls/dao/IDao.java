@@ -11,7 +11,6 @@ import java.util.Optional;
  */
 public interface IDao {
 
-
     /**
      * Select entities
      *
@@ -32,7 +31,6 @@ public interface IDao {
      * @return list of {@link Map}
      */
     List<Map<String, Object>> selectAllEntities(String tableName, int offset, int limit, List<String> columns);
-
 
     /**
      * Select entity

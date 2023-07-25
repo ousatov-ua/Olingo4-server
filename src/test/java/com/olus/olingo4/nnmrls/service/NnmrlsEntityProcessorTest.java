@@ -79,7 +79,7 @@ class NnmrlsEntityProcessorTest {
     private NnmrlsEntityProcessor nnmrlsEntityProcessor;
 
     @BeforeEach
-    public void beforeEach() throws SerializerException {
+    public void beforeEach() {
         reset(olingo4Storage, request, response, uriInfo, uriResourceEntitySet,
                 edmEntitySet, oData, serviceMetadata, oDataSerializer, oDataDeserializer);
         nnmrlsEntityProcessor = new NnmrlsEntityProcessor(olingo4Storage);

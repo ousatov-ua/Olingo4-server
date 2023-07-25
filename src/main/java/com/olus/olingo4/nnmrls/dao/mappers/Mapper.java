@@ -7,6 +7,11 @@ import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Mapper for MyBatis
+ *
+ * @author Oleksii Usatov
+ */
 public interface Mapper {
 
     int updateEntity(UpdateStatementProvider updateStatement);

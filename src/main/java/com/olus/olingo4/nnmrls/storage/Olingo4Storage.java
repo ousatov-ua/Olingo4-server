@@ -44,7 +44,7 @@ public class Olingo4Storage {
      * We need this because we'll receive string with "''" -  Olingo requires to specify string key with quotes,
      * e.g. 'some_id'
      *
-     * @param id original Id received from request
+     * @param id original id received from request
      * @return Key without quotes
      */
     @VisibleForTesting

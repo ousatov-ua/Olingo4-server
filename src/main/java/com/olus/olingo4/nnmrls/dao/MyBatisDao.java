@@ -54,7 +54,6 @@ public class MyBatisDao implements IDao {
                     .collect(Collectors.toList());
             tableToAllColumns.put(fqn.getName(), columns);
         });
-
     }
 
     private static int offset(int offset) {
@@ -135,6 +134,13 @@ public class MyBatisDao implements IDao {
         return List.of();
     }
 
+    /**
+     * Convert list of string columns to type {@link SqlColumn}
+     *
+     * @param table       {@link SqlTable}
+     * @param columnNames list of columns
+     * @return array of {@link SqlColumn}
+     */
     private SqlColumn<?>[] getSqlColumns(SqlTable table, List<String> columnNames) {
         if (columnNames.isEmpty()) {
             return tableToAllColumns.get(table.tableNameAtRuntime()).toArray(new SqlColumn[0]);

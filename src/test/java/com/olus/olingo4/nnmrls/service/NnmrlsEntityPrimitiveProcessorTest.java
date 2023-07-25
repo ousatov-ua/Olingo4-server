@@ -74,7 +74,7 @@ public class NnmrlsEntityPrimitiveProcessorTest {
     private NnmrlsEntityPrimitiveProcessor nnmrlsEntityPrimitiveProcessor;
 
     @BeforeEach
-    public void beforeEach() throws SerializerException {
+    public void beforeEach() {
         reset(olingo4Storage, request, response, uriInfo, uriResourceProperty,
                 edmEntitySet, oData, serviceMetadata, oDataSerializer, edmProperty);
         nnmrlsEntityPrimitiveProcessor = new NnmrlsEntityPrimitiveProcessor(olingo4Storage);
