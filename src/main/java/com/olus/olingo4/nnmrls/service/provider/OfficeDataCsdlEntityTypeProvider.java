@@ -73,11 +73,11 @@ public class OfficeDataCsdlEntityTypeProvider {
         var entityType = new CsdlEntityType();
         entityType.setProperties(Arrays.asList(property_0, property_1, property_2, property_3, property_4, property_5, property_6, property_7, property_8, property_9, property_10, property_11, property_12, property_13, property_14, property_15, property_16, property_17, property_18, property_19, property_20, property_21, property_22, property_23, property_24, property_25, property_26, property_27, property_28, property_29, property_30, property_31, property_32, property_33, property_34, property_35, property_36, property_37, property_38, property_39, property_40, property_41, property_42, property_43, property_44, property_45, property_46, property_47, property_48, property_49));
 
-        // create CsdlPropertyRef for Key element
+        // Create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
         propertyRef.setName("OfficeKey");
 
-        // configure EntityType
+        // Configure EntityType
         entityType.setName(ET_OFFICE_DATA_NAME);
         entityType.setKey(Collections.singletonList(propertyRef));
         return entityType;

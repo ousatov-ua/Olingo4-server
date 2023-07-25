@@ -32,11 +32,11 @@ public class PropertyDataCharacteristicsCsdlEntityTypeProvider {
         var entityType = new CsdlEntityType();
         entityType.setProperties(Arrays.asList(property_0, property_1, property_2, property_3, property_4, property_5, property_6, property_7, property_8, property_9, property_10, property_11, property_12, property_13, property_14));
 
-        // create CsdlPropertyRef for Key element
+        // Create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
         propertyRef.setName("ListingId");
 
-        // configure EntityType
+        // Configure EntityType
         entityType.setName(ET_PROP_DATA_CHARACT_NAME);
         entityType.setKey(Collections.singletonList(propertyRef));
         return entityType;

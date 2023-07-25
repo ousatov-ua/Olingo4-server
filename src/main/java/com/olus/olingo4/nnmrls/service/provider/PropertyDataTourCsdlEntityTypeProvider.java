@@ -24,11 +24,11 @@ public class PropertyDataTourCsdlEntityTypeProvider {
         var entityType = new CsdlEntityType();
         entityType.setProperties(Arrays.asList(property_0, property_1));
 
-        // create CsdlPropertyRef for Key element
+        // Create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
         propertyRef.setName("ListingId");
 
-        // configure EntityType
+        // Configure EntityType
         entityType.setName(ET_PROP_DATA_TOUR_NAME);
         entityType.setKey(Collections.singletonList(propertyRef));
         return entityType;
