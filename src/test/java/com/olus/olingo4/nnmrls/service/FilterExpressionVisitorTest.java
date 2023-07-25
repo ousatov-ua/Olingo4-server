@@ -358,8 +358,8 @@ class FilterExpressionVisitorTest {
         // Execute && Verify
         var thrown = assertThrows(ODataApplicationException.class,
                 () -> visitor.visitMethodCall(MethodKind.CONTAINS, parameters),
-                "Contains needs two parametes of type Edm.String");
-        assertEquals("Contains needs two parametes of type Edm.String", thrown.getMessage());
+                "Contains needs two parameters of type Edm.String");
+        assertEquals("Contains needs two parameters of type Edm.String", thrown.getMessage());
     }
 
     @Test
@@ -407,7 +407,7 @@ class FilterExpressionVisitorTest {
 
 
     @Test
-    void testVisitMemberNotPrimitive() throws ODataApplicationException {
+    void testVisitMemberNotPrimitive() {
 
         // Setup
         var member = mock(Member.class);

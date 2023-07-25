@@ -285,7 +285,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
 
                 return valueParam1.contains(valueParam2);
             } else {
-                throw new ODataApplicationException("Contains needs two parametes of type Edm.String",
+                throw new ODataApplicationException("Contains needs two parameters of type Edm.String",
                         HttpStatusCode.BAD_REQUEST.getStatusCode(), Locale.ENGLISH);
             }
         } else {
