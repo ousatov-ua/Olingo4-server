@@ -21,7 +21,7 @@ public class PropertyDataTaxCsdlEntityTypeProviderTest {
         // Verify
         assertEquals(ET_PROP_DATA_TAX_NAME, type.getName());
         assertEquals("Edm.Int32", type.getProperty("ListingId").getType());
-        assertEquals(2, type.getProperties().size());
+        assertEquals(4, type.getProperties().size());
         assertEquals(1, type.getKey().size());
         assertEquals("ListingId", type.getKey().get(0).getName());
     }

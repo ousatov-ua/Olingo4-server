@@ -21,8 +21,10 @@ public class PropertyDataTaxCsdlEntityTypeProvider {
         // Create EntityType properties - Please use DdlUtil to generate code !!!!
         var property_0 = new CsdlProperty().setName("ListingId").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
         var property_1 = new CsdlProperty().setName("ParcelNumber").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+        var property_2 = new CsdlProperty().setName("TaxAnnualAmount").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
+        var property_3 = new CsdlProperty().setName("TaxSpecialAssessment").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
         var entityType = new CsdlEntityType();
-        entityType.setProperties(Arrays.asList(property_0, property_1));
+        entityType.setProperties(Arrays.asList(property_0, property_1, property_2, property_3));
 
         // Create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();
