@@ -21,9 +21,10 @@ public class LookupsCsdlEntityTypeProvider {
         // Create EntityType properties - Please use DdlUtil to generate code !!!!
         var property_0 = new CsdlProperty().setName("LookupIds").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
         var property_1 = new CsdlProperty().setName("Lookups").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-        var property_2 = new CsdlProperty().setName("StandardName").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+        var property_2 = new CsdlProperty().setName("LookupField").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+        var property_3 = new CsdlProperty().setName("Value").setType(EdmPrimitiveTypeKind.Int64.getFullQualifiedName());
         var entityType = new CsdlEntityType();
-        entityType.setProperties(Arrays.asList(property_0, property_1, property_2));
+        entityType.setProperties(Arrays.asList(property_0, property_1, property_2, property_3));
 
         // Create CsdlPropertyRef for Key element
         var propertyRef = new CsdlPropertyRef();

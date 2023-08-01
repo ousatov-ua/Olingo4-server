@@ -21,7 +21,7 @@ class LookupsCsdlEntityTypeProviderTest {
         // Verify
         assertEquals(ET_LOOKUPS_NAME, type.getName());
         assertEquals("Edm.Int32", type.getProperty("LookupIds").getType());
-        assertEquals(3, type.getProperties().size());
+        assertEquals(4, type.getProperties().size());
         assertEquals(1, type.getKey().size());
         assertEquals("LookupIds", type.getKey().get(0).getName());
     }

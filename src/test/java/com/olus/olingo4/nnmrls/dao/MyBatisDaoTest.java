@@ -55,7 +55,8 @@ class MyBatisDaoTest extends FuncDbTest {
         var result = resultOpt.get();
         assertEquals(1, result.get("LookupIds"));
         assertEquals("Lookups1", result.get("Lookups"));
-        assertEquals("StandardName1", result.get("StandardName"));
+        assertEquals("LookupField1", result.get("LookupField"));
+        assertEquals(10L, result.get("Value"));
     }
 
     @Test
@@ -72,12 +73,14 @@ class MyBatisDaoTest extends FuncDbTest {
         var item1 = result.get(0);
         assertEquals(1, item1.get("LookupIds"));
         assertEquals("Lookups1", item1.get("Lookups"));
-        assertEquals("StandardName1", item1.get("StandardName"));
+        assertEquals("LookupField1", item1.get("LookupField"));
+        assertEquals(10L, item1.get("Value"));
 
         var item2 = result.get(1);
         assertEquals(2, item2.get("LookupIds"));
         assertEquals("Lookups2", item2.get("Lookups"));
-        assertEquals("StandardName2", item2.get("StandardName"));
+        assertEquals("LookupField2", item2.get("LookupField"));
+        assertEquals(20L, item2.get("Value"));
     }
 
     @Test
@@ -93,8 +96,8 @@ class MyBatisDaoTest extends FuncDbTest {
         assertEquals(1, result.size());
         var item1 = result.get(0);
         assertEquals(2, item1.get("LookupIds"));
-        assertEquals("Lookups2", item1.get("Lookups"));
-        assertEquals("StandardName2", item1.get("StandardName"));
+        assertEquals("LookupField2", item1.get("LookupField"));
+        assertEquals(20L, item1.get("Value"));
     }
 
     @Test
@@ -104,7 +107,8 @@ class MyBatisDaoTest extends FuncDbTest {
         var request = Map.<String, Object>of(
                 "LookupIds", 1,
                 "Lookups", "Lookups1",
-                "StandardName", "StandardName1"
+                "LookupField", "LookupField1",
+                "Value", 10
         );
 
         // Execute
@@ -113,7 +117,8 @@ class MyBatisDaoTest extends FuncDbTest {
         // Verify
         assertEquals(1, item.get("LookupIds"));
         assertEquals("Lookups1", item.get("Lookups"));
-        assertEquals("StandardName1", item.get("StandardName"));
+        assertEquals("LookupField1", item.get("LookupField"));
+        assertEquals(10L, item.get("Value"));
 
         var resultOpt = myBatisDao.selectEntity("Lookups", "LookupIds", 1);
         assertTrue(resultOpt.isPresent());
@@ -122,7 +127,8 @@ class MyBatisDaoTest extends FuncDbTest {
         // Verify
         assertEquals(1, item.get("LookupIds"));
         assertEquals("Lookups1", item.get("Lookups"));
-        assertEquals("StandardName1", item.get("StandardName"));
+        assertEquals("LookupField1", item.get("LookupField"));
+        assertEquals(10L, item.get("Value"));
     }
 
     @Test
@@ -132,7 +138,8 @@ class MyBatisDaoTest extends FuncDbTest {
         var request = Map.<String, Object>of(
                 "LookupIds", 1,
                 "Lookups", "Lookups1",
-                "StandardName", "StandardName1"
+                "LookupField", "LookupField1",
+                "Value", 10
         );
 
         var item = myBatisDao.insertEntity("Lookups", "LookupIds", request);
@@ -140,7 +147,8 @@ class MyBatisDaoTest extends FuncDbTest {
         request = Map.of(
                 "LookupIds", 1,
                 "Lookups", "Lookups1new",
-                "StandardName", "StandardName1new"
+                "LookupField", "LookupField1new",
+                "Value", 20
         );
 
         // Execute
@@ -155,7 +163,8 @@ class MyBatisDaoTest extends FuncDbTest {
         // Verify
         assertEquals(1, item.get("LookupIds"));
         assertEquals("Lookups1new", item.get("Lookups"));
-        assertEquals("StandardName1new", item.get("StandardName"));
+        assertEquals("LookupField1new", item.get("LookupField"));
+        assertEquals(20L, item.get("Value"));
     }
 
     @Test

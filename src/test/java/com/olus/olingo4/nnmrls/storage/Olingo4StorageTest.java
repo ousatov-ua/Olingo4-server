@@ -96,7 +96,7 @@ public class Olingo4StorageTest extends FuncDbTest {
 
         // Execute
         var dataOpt = storage.getDataByKeys(edmEntitySet, List.of(uriParameter),
-                List.of("LookupIds", "Lookups", "StandardName"));
+                List.of("LookupIds", "Lookups", "LookupField"));
 
         // Verify
         assertTrue(dataOpt.isPresent());
@@ -105,7 +105,7 @@ public class Olingo4StorageTest extends FuncDbTest {
         assertEquals(3, data.getProperties().size());
         assertEquals(Map.of("Lookups", "Lookups1",
                 "LookupIds", 1,
-                "StandardName", "StandardName1"), data.getProperties()
+                "LookupField", "LookupField1"), data.getProperties()
                 .stream().map(p -> new AbstractMap.SimpleEntry<>(p.getName(), p.getValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
@@ -128,7 +128,7 @@ public class Olingo4StorageTest extends FuncDbTest {
 
         // Execute
         var dataList = storage.getData(edmEntitySet, offset, top,
-                List.of("LookupIds", "Lookups", "StandardName"));
+                List.of("LookupIds", "Lookups", "LookupField"));
 
         // Verify
         assertEquals(1, dataList.getEntities().size());
@@ -137,7 +137,7 @@ public class Olingo4StorageTest extends FuncDbTest {
         assertEquals(3, data.getProperties().size());
         assertEquals(Map.of("Lookups", "Lookups" + suffixForFieldValue,
                 "LookupIds", suffixForFieldValue,
-                "StandardName", "StandardName" + suffixForFieldValue), data.getProperties()
+                "LookupField", "LookupField" + suffixForFieldValue), data.getProperties()
                 .stream().map(p -> new AbstractMap.SimpleEntry<>(p.getName(), p.getValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
@@ -160,7 +160,7 @@ public class Olingo4StorageTest extends FuncDbTest {
 
         // Execute
         var dataList = storage.getData(edmEntitySet, -1, -1,
-                List.of("LookupIds", "Lookups", "StandardName"));
+                List.of("LookupIds", "Lookups", "LookupField"));
 
         // Verify
         assertEquals(2, dataList.getEntities().size());
@@ -170,7 +170,7 @@ public class Olingo4StorageTest extends FuncDbTest {
                     assertEquals(3, data.getProperties().size());
                     assertEquals(Map.of("Lookups", "Lookups" + i,
                             "LookupIds", i,
-                            "StandardName", "StandardName" + i), data.getProperties()
+                            "LookupField", "LookupField" + i), data.getProperties()
                             .stream().map(p -> new AbstractMap.SimpleEntry<>(p.getName(), p.getValue()))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
                 });
@@ -188,7 +188,7 @@ public class Olingo4StorageTest extends FuncDbTest {
         when(edmEntitySet.getName()).thenReturn(NnmrlsEdmProvider.ES_LOOKUPS_NAME);
         var edmEntityType = mock(EdmEntityType.class);
         when(edmEntityType.getName()).thenReturn(NnmrlsEdmProvider.ET_LOOKUPS_NAME);
-        when(edmEntityType.getPropertyNames()).thenReturn(List.of("LookupIds", "Lookups", "StandardName"));
+        when(edmEntityType.getPropertyNames()).thenReturn(List.of("LookupIds", "Lookups", "LookupField"));
         when(edmEntitySet.getEntityType()).thenReturn(edmEntityType);
         var edmKeyPropertyRef = mock(EdmKeyPropertyRef.class);
         when(edmKeyPropertyRef.getName()).thenReturn("LookupIds");
@@ -212,7 +212,7 @@ public class Olingo4StorageTest extends FuncDbTest {
             entity.addProperty(property2);
         }
         var property3 = new Property();
-        property3.setName("StandardName");
+        property3.setName("LookupField");
         property3.setValue(ValueType.PRIMITIVE, "Some Name");
         entity.addProperty(property3);
 
@@ -227,7 +227,7 @@ public class Olingo4StorageTest extends FuncDbTest {
 
         // Execute
         var dataOpt = storage.getDataByKeys(edmEntitySet, List.of(uriParameter),
-                List.of("LookupIds", "Lookups", "StandardName"));
+                List.of("LookupIds", "Lookups", "LookupField"));
 
         // Verify
         assertTrue(dataOpt.isPresent());
@@ -235,13 +235,13 @@ public class Olingo4StorageTest extends FuncDbTest {
         switch (httpMethod) {
             case POST:
                 if ("UPDATE".equals(operation)) {
-                    assertEquals("Some Name", data.getProperty("StandardName").getValue());
+                    assertEquals("Some Name", data.getProperty("LookupField").getValue());
                     assertEquals("Lookups1", data.getProperty("Lookups").getValue());
                 }
                 break;
             case PUT:
                 if ("UPDATE".equals(operation)) {
-                    assertEquals("Some Name", data.getProperty("StandardName").getValue());
+                    assertEquals("Some Name", data.getProperty("LookupField").getValue());
                     assertNull(data.getProperty("Lookups"));
                 }
                 break;
@@ -256,7 +256,7 @@ public class Olingo4StorageTest extends FuncDbTest {
         when(edmEntitySet.getName()).thenReturn(NnmrlsEdmProvider.ES_LOOKUPS_NAME);
         var edmEntityType = mock(EdmEntityType.class);
         when(edmEntityType.getName()).thenReturn(NnmrlsEdmProvider.ET_LOOKUPS_NAME);
-        when(edmEntityType.getPropertyNames()).thenReturn(List.of("LookupIds", "Lookups", "StandardName"));
+        when(edmEntityType.getPropertyNames()).thenReturn(List.of("LookupIds", "Lookups", "LookupField"));
         when(edmEntitySet.getEntityType()).thenReturn(edmEntityType);
         var edmKeyPropertyRef = mock(EdmKeyPropertyRef.class);
         when(edmKeyPropertyRef.getName()).thenReturn("LookupIds");
@@ -277,7 +277,7 @@ public class Olingo4StorageTest extends FuncDbTest {
         property2.setValue(ValueType.PRIMITIVE, "Lookups1");
         entity.addProperty(property2);
         var property3 = new Property();
-        property3.setName("StandardName");
+        property3.setName("LookupField");
         property3.setValue(ValueType.PRIMITIVE, "Some Name");
         entity.addProperty(property3);
 

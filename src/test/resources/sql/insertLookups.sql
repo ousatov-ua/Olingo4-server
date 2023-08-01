@@ -1,5 +1,5 @@
-insert into test.Lookups (LookupIds, Lookups, StandardName)
-values (1, 'Lookups1', 'StandardName1');
+insert into test.Lookups (LookupIds, Lookups, LookupField, Value)
+values (1, 'Lookups1', 'LookupField1', 10);
 
-insert into test.Lookups (LookupIds, Lookups, StandardName)
-values (2, 'Lookups2', 'StandardName2');
+insert into test.Lookups (LookupIds, Lookups, LookupField, Value)
+values (2, 'Lookups2', 'LookupField2', 20);
