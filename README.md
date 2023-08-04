@@ -170,8 +170,7 @@ Next current filter operations are supported
 [http://localhost:8080/.../PropertyDataLocation?$filter=contains(UnparsedAddress,'ROSECREST DRIVE 1') and ListingId eq 3]()
 
 ## OAUTH2
-Currently, oauth2 Google is implemented
+Currently, oauth2 implemented (grant_type=client_credentials)
 
-Please put file client_secret.json into `/resources/`
-
-Also, please update `config.json` in `/resources/` to point to correct paths (basically, you will need to update domain name etc)
+Please take a look into `config.json` in `/resources/`.
+Cache for tokens is Guava Cache.
