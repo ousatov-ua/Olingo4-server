@@ -1,7 +1,6 @@
 {
-  "top_app": "http://ec2-34-213-85-6.us-west-2.compute.amazonaws.com:8080/nnmrls/NnmrlsService.svc",
-  "oauth2_callback_url": "http://ec2-34-213-85-6.us-west-2.compute.amazonaws.com:8080/nnmrls/callback",
-  "path_app": "/nnmrls",
-  "service": "/NnmrlsService.svc",
-  "path_auth_login": "/nnmrls/login"
+  "tokenEndpoint": "https://nnrmls.paragonrels.com/OData/NNRMLS/identity/connect/token",
+  "grantType": "client_credentials",
+  "scope": "OData",
+  "accessKeyExpiration": 7200
 }
