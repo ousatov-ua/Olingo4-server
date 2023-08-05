@@ -1,5 +1,6 @@
 package com.olus.olingo4.nnmrls.web;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.olus.olingo4.nnmrls.oauth.OauthCache;
 
 import javax.servlet.Filter;
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.olus.olingo4.nnmrls.util.Util.isEmpty;
+
 /**
  * Filter that checks that user authenticated
  *
@@ -19,8 +22,10 @@ import java.io.IOException;
  */
 public class AuthFilter implements Filter {
 
-    private static final String BEARER = "Bearer";
-    private static final String AUTHORIZATION = "Authorization";
+    @VisibleForTesting
+    static final String BEARER = "Bearer";
+    @VisibleForTesting
+    static final String AUTHORIZATION = "Authorization";
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -33,7 +38,7 @@ public class AuthFilter implements Filter {
         var request = (HttpServletRequest) servletRequest;
         var response = (HttpServletResponse) servletResponse;
         var auth = request.getHeader(AUTHORIZATION);
-        if (auth == null || !auth.contains(BEARER)) {
+        if (isEmpty(auth) || !auth.contains(BEARER) || auth.length() == BEARER.length()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

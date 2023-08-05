@@ -38,4 +38,8 @@ public class Util {
         UriResourceEntitySet uriResource = (UriResourceEntitySet) resourcePaths.get(0);
         return uriResource.getEntitySet();
     }
+
+    public static boolean isEmpty(String value){
+       return value == null || value.trim().isEmpty();
+    }
 }

@@ -1,12 +1,12 @@
 package com.olus.olingo4.nnmrls.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
+import com.olus.olingo4.nnmrls.exception.AuthorizationException;
 import com.olus.olingo4.nnmrls.oauth.OauthCache;
 import com.olus.olingo4.nnmrls.vo.Const;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,9 +20,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+
+import static com.olus.olingo4.nnmrls.util.Util.isEmpty;
 
 /**
  * Servlet to get access token
@@ -31,19 +33,27 @@ import java.util.Map;
  */
 @Slf4j
 public class SigninServlet extends HttpServlet {
-    private static final String CLIENT_ID = "client_id";
-    private static final String CLIENT_SECRET = "client_secret";
+    @VisibleForTesting
+    static final String CLIENT_ID_HEADER = "client_id";
+    @VisibleForTesting
+    static final String CLIENT_SECRET_HEADER = "client_secret";
+    @VisibleForTesting
+    static final String ACCESS_TOKEN_ATTR = "access_token";
+    public static final String APPLICATION_JSON_CT = "application/json";
+    private static final HttpClient HTTP_CLIENT = new DefaultHttpClient();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        var clientId = req.getHeader(CLIENT_ID);
-        var clientSecret = req.getHeader(CLIENT_SECRET);
-        if (clientId == null || clientSecret == null) {
+        var clientId = req.getHeader(CLIENT_ID_HEADER);
+        var clientSecret = req.getHeader(CLIENT_SECRET_HEADER);
+        if (isEmpty(clientId) || isEmpty(clientSecret)) {
+            log.error("Client_id or client_secret is empty, clientId={}", clientId);
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        String applicationToken = clientId + ":" + clientSecret;
-        applicationToken = "Basic " + new String(Base64.encodeBase64(applicationToken.getBytes()));
+        var clientCredentials = clientId + ":" + clientSecret;
+        var applicationToken = "Basic " + new String(Base64.encodeBase64(clientCredentials.getBytes()));
         String result;
         try {
             var config = Const.getInstance().getConfig();
@@ -54,36 +64,55 @@ public class SigninServlet extends HttpServlet {
                             "Authorization", applicationToken
                     ));
         } catch (Exception e) {
-            log.error("Exception occurred", e);
+            log.error("Exception occurred during authorization", e);
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        var jwt = new ObjectMapper().readValue(result, Map.class);
-
-        String accessToken = (String) jwt.get("access_token");
+        var jwt = OBJECT_MAPPER.readValue(result, Map.class);
+        var accessToken = (String) jwt.get(ACCESS_TOKEN_ATTR);
         OauthCache.getInstance().putAccessKeyToCache(accessToken);
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getOutputStream().println(result);
-        resp.getOutputStream().close();
+        resp.setContentType(APPLICATION_JSON_CT);
+        resp.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+        try (var out = resp.getOutputStream()) {
+            out.println(result);
+        }
     }
 
-    private static String post(String url, Map<String, String> formParameters, Map<String, String> headers) throws IOException {
-        HttpPost request = new HttpPost(url);
-        List<NameValuePair> nvps = new ArrayList<>();
-        formParameters.forEach((key, value) -> nvps.add(new BasicNameValuePair(key, value)));
+    /**
+     * Execute POST request
+     *
+     * @param url            url
+     * @param formParameters form parameters
+     * @param headers        headers
+     * @return body of response
+     * @throws IOException exception
+     */
+    @VisibleForTesting
+    String post(String url, Map<String, String> formParameters, Map<String, String> headers) throws IOException {
+        var request = new HttpPost(url);
+        var nvpList = new ArrayList<NameValuePair>();
+        formParameters.forEach((key, value) -> nvpList.add(new BasicNameValuePair(key, value)));
         headers.forEach(request::addHeader);
-        request.setEntity(new UrlEncodedFormEntity(nvps));
+        request.setEntity(new UrlEncodedFormEntity(nvpList));
         return execute(request);
     }
 
-    private static String execute(HttpRequestBase request) throws IOException {
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse response = httpClient.execute(request);
-        HttpEntity entity = response.getEntity();
-        String body = EntityUtils.toString(entity);
+    /**
+     * Execute {@link HttpRequestBase}
+     *
+     * @param request {@link HttpRequestBase}
+     * @return body of response
+     * @throws IOException exception
+     */
+    @VisibleForTesting
+    String execute(HttpRequestBase request) throws IOException {
+        var response = HTTP_CLIENT.execute(request);
+        var entity = response.getEntity();
+        var body = EntityUtils.toString(entity);
         if (response.getStatusLine().getStatusCode() != HttpServletResponse.SC_OK) {
-            throw new RuntimeException("Expected 200 but got " + response.getStatusLine().getStatusCode() + ", with body " + body);
+            var statusCode = response.getStatusLine().getStatusCode();
+            log.error("Authorization error. Expected 200 but got {}, with body {}", statusCode, body);
+            throw new AuthorizationException("Expected 200 but got " + statusCode + ", with body " + body);
         }
         return body;
     }
