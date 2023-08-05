@@ -33,13 +33,13 @@ import static com.olus.olingo4.nnmrls.util.Util.isEmpty;
  */
 @Slf4j
 public class SigninServlet extends HttpServlet {
+    public static final String APPLICATION_JSON_CT = "application/json";
     @VisibleForTesting
     static final String CLIENT_ID_HEADER = "client_id";
     @VisibleForTesting
     static final String CLIENT_SECRET_HEADER = "client_secret";
     @VisibleForTesting
     static final String ACCESS_TOKEN_ATTR = "access_token";
-    public static final String APPLICATION_JSON_CT = "application/json";
     private static final HttpClient HTTP_CLIENT = new DefaultHttpClient();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

@@ -14,11 +14,34 @@ import java.util.Map;
  */
 public interface Mapper {
 
+    /**
+     * Update data
+     *
+     * @param updateStatement statement
+     * @return number of rows updated
+     */
     int updateEntity(UpdateStatementProvider updateStatement);
 
+    /**
+     * Insert data
+     *
+     * @param insertStatement insert statement
+     */
     void insertEntity(InsertStatementProvider<?> insertStatement);
 
+    /**
+     * Select single entity
+     *
+     * @param selectStatement select statement
+     * @return map
+     */
     Map<String, Object> selectEntity(SelectStatementProvider selectStatement);
 
+    /**
+     * Select all entities
+     *
+     * @param selectStatement select statement
+     * @return List of {@link Map}
+     */
     List<Map<String, Object>> selectAllEntities(SelectStatementProvider selectStatement);
 }

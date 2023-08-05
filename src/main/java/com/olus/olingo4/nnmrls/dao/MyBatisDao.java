@@ -55,10 +55,22 @@ public class MyBatisDao implements IDao {
         });
     }
 
+    /**
+     * Wrapper for offset (will set default if provided wrong value)
+     *
+     * @param offset offset
+     * @return offset
+     */
     private static int offset(int offset) {
         return Math.max(offset, 0);
     }
 
+    /**
+     * Wrapper for limit (will set default if provided wrong value)
+     *
+     * @param limit limit
+     * @return limit
+     */
     private static int limit(int limit) {
         if (limit <= 0) {
             return DEFAULT_ROW_LIMIT;

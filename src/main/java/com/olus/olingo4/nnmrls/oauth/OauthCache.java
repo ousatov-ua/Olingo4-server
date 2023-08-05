@@ -13,17 +13,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class OauthCache {
     private static final OauthCache OAUTH_CACHE = new OauthCache(Const.getInstance().getConfig().getAccessKeyExpiration());
-
-    public static OauthCache getInstance() {
-        return OAUTH_CACHE;
-    }
-
     public final Cache<String, String> cache;
 
     public OauthCache(long expiration) {
         cache = CacheBuilder.newBuilder()
                 .expireAfterAccess(expiration, TimeUnit.SECONDS)
                 .build();
+    }
+
+    public static OauthCache getInstance() {
+        return OAUTH_CACHE;
     }
 
     public void putAccessKeyToCache(String accessKey) {

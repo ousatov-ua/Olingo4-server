@@ -39,7 +39,7 @@ public class Util {
         return uriResource.getEntitySet();
     }
 
-    public static boolean isEmpty(String value){
-       return value == null || value.trim().isEmpty();
+    public static boolean isEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
