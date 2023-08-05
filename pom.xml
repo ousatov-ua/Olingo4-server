@@ -7,7 +7,7 @@
     <packaging>war</packaging>
     <version>1.0.0</version>
 
-    <name>${project.artifactId}-webapp</name>
+    <name>${project.artifactId}</name>
 
     <properties>
         <javax.version>2.5</javax.version>
