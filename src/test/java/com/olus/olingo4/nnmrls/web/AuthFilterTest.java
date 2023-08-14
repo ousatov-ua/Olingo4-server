@@ -100,7 +100,7 @@ class AuthFilterTest {
     void testHappyPath() throws ServletException, IOException {
 
         // Setup
-        OauthCache.getInstance().putAccessKeyToCache("token");
+        OauthCache.getInstance().putAccessKeyToCache("token", 1000);
         when(servletRequest.getHeader(AUTHORIZATION)).thenReturn("Bearer token");
 
         // Execute

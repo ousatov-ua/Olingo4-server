@@ -34,6 +34,7 @@ import static com.olus.olingo4.nnmrls.util.Util.isEmpty;
 @Slf4j
 public class SigninServlet extends HttpServlet {
     public static final String APPLICATION_JSON_CT = "application/json";
+    public static final String EXPIRES_IN_ATTR = "expires_in";
     @VisibleForTesting
     static final String CLIENT_ID_HEADER = "client_id";
     @VisibleForTesting
@@ -70,7 +71,13 @@ public class SigninServlet extends HttpServlet {
         }
         var jwt = OBJECT_MAPPER.readValue(result, Map.class);
         var accessToken = (String) jwt.get(ACCESS_TOKEN_ATTR);
-        OauthCache.getInstance().putAccessKeyToCache(accessToken);
+        var expiresIn = (Integer) jwt.get(EXPIRES_IN_ATTR);
+        if (expiresIn == null) {
+            log.error("Expires In is not specified");
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        OauthCache.getInstance().putAccessKeyToCache(accessToken, expiresIn);
         resp.setContentType(APPLICATION_JSON_CT);
         resp.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         try (var out = resp.getOutputStream()) {

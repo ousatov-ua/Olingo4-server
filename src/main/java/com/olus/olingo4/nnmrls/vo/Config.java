@@ -7,5 +7,5 @@ public class Config {
     private String tokenEndpoint;
     private String grantType;
     private String scope;
-    private int accessKeyExpiration;
+    private Integer accessKeyExpiration;
 }
