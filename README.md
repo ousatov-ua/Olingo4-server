@@ -1,4 +1,4 @@
-# nnrmls
+# Olingo4 server
 
 ## Tomcat config
 
